@@ -1,5 +1,5 @@
 .admin-panel {
-  font-family: 'Manrope', system-ui, sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
 }
 
 .admin-panel h1,
@@ -8,11 +8,12 @@
 .admin-panel h4,
 .admin-panel h5,
 .admin-panel h6 {
-  font-family: 'Manrope', system-ui, sans-serif;
+  font-family: 'Cormorant Garamond', Georgia, serif;
   letter-spacing: -0.01em;
+  font-weight: 600;
 }
 
-/* Tailwind font-serif classini admin panel ichida bekor qilish */
+/* Tailwind font-serif classini admin panel ichida Cormorant Garamond ga o'rnatish */
 .admin-panel .font-serif {
-  font-family: 'Manrope', system-ui, sans-serif;
+  font-family: 'Cormorant Garamond', Georgia, serif;
 }

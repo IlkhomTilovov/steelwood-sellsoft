@@ -12,15 +12,15 @@ export function ThemeLoader({ children }: ThemeLoaderProps) {
     return (
       <div 
         className="fixed inset-0 flex items-center justify-center"
-        style={{ backgroundColor: '#f5f5f5' }}
+        style={{ backgroundColor: '#F5F3EE' }}
       >
         <div className="flex flex-col items-center gap-4">
           <div 
             className="w-10 h-10 border-4 border-t-transparent rounded-full animate-spin"
-            style={{ borderColor: '#ccc', borderTopColor: '#333' }}
+            style={{ borderColor: '#D6C2A8', borderTopColor: '#1F3A2E' }}
           />
           {!isLoading && (
-            <p className="text-sm" style={{ color: '#666' }}>
+            <p className="text-sm" style={{ color: '#1F3A2E' }}>
               No active theme configured
             </p>
           )}
