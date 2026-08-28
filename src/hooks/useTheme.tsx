@@ -8,34 +8,34 @@ const THEME_READY_KEY = 'furniture-theme-ready';
 // Current live theme inlined as a first-paint fallback so mobile users do not
 // wait for a backend round-trip before the LCP hero can render.
 const DEFAULT_ACTIVE_THEME: Theme = {
-  name: 'Mirmexa Default',
-  slug: 'mirmexa-default',
+  name: 'OrisHome Premium',
+  slug: 'orishome-premium',
   colorPalette: {
-    background: '0 0% 98%',
-    foreground: '210 20% 15%',
-    card: '0 0% 98%',
-    cardForeground: '210 20% 15%',
-    popover: '0 0% 98%',
-    popoverForeground: '210 20% 15%',
-    primary: '210 20% 20%',
-    primaryForeground: '0 0% 98%',
-    secondary: '210 16% 93%',
-    secondaryForeground: '210 20% 15%',
-    muted: '210 16% 93%',
-    mutedForeground: '210 20% 15%',
-    accent: '215 25% 35%',
-    accentForeground: '0 0% 98%',
+    background: '43 30% 95%',
+    foreground: '0 0% 13%',
+    card: '43 26% 97%',
+    cardForeground: '0 0% 13%',
+    popover: '43 30% 95%',
+    popoverForeground: '0 0% 13%',
+    primary: '153 30% 17%',
+    primaryForeground: '43 30% 95%',
+    secondary: '34 36% 75%',
+    secondaryForeground: '153 30% 17%',
+    muted: '43 24% 90%',
+    mutedForeground: '0 0% 40%',
+    accent: '34 36% 75%',
+    accentForeground: '153 30% 17%',
     destructive: '0 84% 60%',
     destructiveForeground: '0 0% 100%',
-    border: '210 16% 93%',
-    input: '210 16% 93%',
-    ring: '210 20% 20%',
-    warmCream: '0 0% 98%',
-    warmBeige: '210 16% 93%',
-    warmBrown: '210 20% 20%',
-    darkWood: '210 20% 15%',
-    goldAccent: '45 93% 47%',
-    sageGreen: '142 76% 36%',
+    border: '34 30% 85%',
+    input: '34 30% 85%',
+    ring: '153 30% 17%',
+    warmCream: '43 30% 95%',
+    warmBeige: '34 36% 75%',
+    warmBrown: '153 30% 17%',
+    darkWood: '0 0% 13%',
+    goldAccent: '38 45% 55%',
+    sageGreen: '153 30% 17%',
     mediaForeground: '0 0% 100%',
     success: '142 71% 45%',
     successForeground: '0 0% 100%',
@@ -43,17 +43,17 @@ const DEFAULT_ACTIVE_THEME: Theme = {
     whatsappForeground: '0 0% 100%',
   },
   typography: {
-    fontSans: 'Manrope, system-ui, sans-serif',
-    fontSerif: 'Manrope, system-ui, sans-serif',
-    fontHeading: 'Manrope, system-ui, sans-serif',
+    fontSans: "'Inter', system-ui, sans-serif",
+    fontSerif: "'Cormorant Garamond', Georgia, serif",
+    fontHeading: "'Cormorant Garamond', Georgia, serif",
   },
   componentStyles: {
-    borderRadius: '0.5rem',
-    buttonRadius: '0.5rem',
-    cardRadius: '0.5rem',
-    shadowSm: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
-    shadowMd: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
-    shadowLg: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
+    borderRadius: '1rem',
+    buttonRadius: '1.5rem',
+    cardRadius: '2rem',
+    shadowSm: '0 1px 2px hsl(0 0% 0% / 0.04), 0 1px 3px hsl(0 0% 0% / 0.03)',
+    shadowMd: '0 4px 12px -4px hsl(153 30% 17% / 0.08), 0 2px 6px -2px hsl(153 30% 17% / 0.05)',
+    shadowLg: '0 12px 32px -8px hsl(153 30% 17% / 0.12), 0 4px 12px -4px hsl(153 30% 17% / 0.06)',
   },
   layoutSettings: {
     containerMaxWidth: '1280px',
@@ -128,10 +128,11 @@ export const applyThemeToDocument = (theme: Theme) => {
     root.style.setProperty(`--${cssVar}`, value);
   });
 
-  const fallback = 'system-ui, sans-serif';
-  root.style.setProperty('--font-sans', theme.typography?.fontSans || `Manrope, ${fallback}`);
-  root.style.setProperty('--font-serif', theme.typography?.fontSerif || theme.typography?.fontSans || `Manrope, ${fallback}`);
-  root.style.setProperty('--font-heading', theme.typography?.fontHeading || theme.typography?.fontSans || `Manrope, ${fallback}`);
+  const sansFallback = "'Inter', system-ui, sans-serif";
+  const serifFallback = "'Cormorant Garamond', Georgia, serif";
+  root.style.setProperty('--font-sans', theme.typography?.fontSans || sansFallback);
+  root.style.setProperty('--font-serif', theme.typography?.fontSerif || serifFallback);
+  root.style.setProperty('--font-heading', theme.typography?.fontHeading || serifFallback);
 
 
   root.style.setProperty('--radius', theme.componentStyles.borderRadius);
