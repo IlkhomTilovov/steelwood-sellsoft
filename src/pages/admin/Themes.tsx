@@ -21,6 +21,7 @@ import { useAdminT } from '@/hooks/useAdminT';
 
 const FONT_OPTIONS = [
   { value: "'Inter', system-ui, sans-serif", label: "Inter" },
+  { value: "'Cormorant Garamond', Georgia, serif", label: "Cormorant Garamond" },
   { value: "'Playfair Display', Georgia, serif", label: "Playfair Display" },
   { value: "'Roboto', system-ui, sans-serif", label: "Roboto" },
   { value: "'Montserrat', system-ui, sans-serif", label: "Montserrat" },
@@ -43,16 +44,16 @@ const RADIUS_OPTIONS = [
 
 const THEME_PRESETS = [
   {
-    name: 'OrsiHome Premium',
-    tagline: 'Dark Green + Beige',
+    name: 'OrisHome Premium',
+    tagline: 'Deep Green + Warm Sand',
     values: {
       isDark: false,
-      primaryColor: '150 32% 17%',
-      secondaryColor: '35 38% 75%',
-      accentColor: '35 38% 75%',
+      primaryColor: '153 30% 17%',
+      secondaryColor: '34 36% 75%',
+      accentColor: '34 36% 75%',
       backgroundColor: '43 30% 95%',
       foregroundColor: '0 0% 13%',
-      fontFamily: "'Playfair Display', Georgia, serif",
+      fontFamily: "'Cormorant Garamond', Georgia, serif",
       borderRadius: '1.5rem',
       shadowLevel: 'medium',
     },
