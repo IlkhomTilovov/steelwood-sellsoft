@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Theme-driven Design System — Manrope as the global typeface (loaded via index.html). */
+/* OrisHome Premium Design System — Inter (body) + Cormorant Garamond (headings) */
 
 @layer base {
   * {
@@ -10,50 +10,101 @@
   }
 
   :root {
-    --font-sans: 'Manrope', system-ui, sans-serif;
-    --font-serif: 'Manrope', system-ui, sans-serif;
-    --font-heading: 'Manrope', system-ui, sans-serif;
-    --background: 0 0% 98%;
-    --foreground: 210 20% 15%;
-    --card: 0 0% 98%;
-    --card-foreground: 210 20% 15%;
-    --popover: 0 0% 98%;
-    --popover-foreground: 210 20% 15%;
-    --primary: 210 20% 20%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 210 16% 93%;
-    --secondary-foreground: 210 20% 15%;
-    --muted: 210 16% 93%;
-    --muted-foreground: 210 20% 15%;
-    --accent: 215 25% 35%;
-    --accent-foreground: 0 0% 98%;
+    --font-sans: 'Inter', system-ui, sans-serif;
+    --font-serif: 'Cormorant Garamond', Georgia, serif;
+    --font-heading: 'Cormorant Garamond', Georgia, serif;
+
+    /* OrisHome Premium — Light palette */
+    --background: 43 30% 95%;
+    --foreground: 0 0% 13%;
+    --card: 43 26% 97%;
+    --card-foreground: 0 0% 13%;
+    --popover: 43 30% 95%;
+    --popover-foreground: 0 0% 13%;
+    --primary: 153 30% 17%;
+    --primary-foreground: 43 30% 95%;
+    --secondary: 34 36% 75%;
+    --secondary-foreground: 153 30% 17%;
+    --muted: 43 24% 90%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 34 36% 75%;
+    --accent-foreground: 153 30% 17%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 210 16% 93%;
-    --input: 210 16% 93%;
-    --ring: 210 20% 20%;
-    --warm-cream: 0 0% 98%;
-    --warm-beige: 210 16% 93%;
-    --warm-brown: 210 20% 20%;
-    --dark-wood: 210 20% 15%;
-    --gold-accent: 45 93% 47%;
-    --sage-green: 142 76% 36%;
+    --border: 34 30% 85%;
+    --input: 34 30% 85%;
+    --ring: 153 30% 17%;
+
+    /* Legacy warm tokens — mapped to OrisHome palette */
+    --warm-cream: 43 30% 95%;
+    --warm-beige: 34 36% 75%;
+    --warm-brown: 153 30% 17%;
+    --dark-wood: 0 0% 13%;
+    --gold-accent: 38 45% 55%;
+    --sage-green: 153 30% 17%;
+
     /* Media overlay text (always readable on dark image overlays) */
     --media-foreground: 0 0% 100%;
+
     /* Status / channel colors — theme-driven */
     --success: 142 71% 45%;
     --success-foreground: 0 0% 100%;
     --whatsapp: 142 70% 42%;
     --whatsapp-foreground: 0 0% 100%;
-    --radius: 0.5rem;
-    --button-radius: 0.5rem;
-    --card-radius: 0.5rem;
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+
+    /* Premium radius scale: 16 / 24 / 32px */
+    --radius: 1rem;
+    --button-radius: 1.5rem;
+    --card-radius: 2rem;
+
+    /* Soft premium shadows */
+    --shadow-sm: 0 1px 2px hsl(0 0% 0% / 0.04), 0 1px 3px hsl(0 0% 0% / 0.03);
+    --shadow-md: 0 4px 12px -4px hsl(153 30% 17% / 0.08), 0 2px 6px -2px hsl(153 30% 17% / 0.05);
+    --shadow-lg: 0 12px 32px -8px hsl(153 30% 17% / 0.12), 0 4px 12px -4px hsl(153 30% 17% / 0.06);
+
     --container-max-width: 1280px;
     --section-spacing: 4rem;
     --card-padding: 1.5rem;
+  }
+
+  .dark {
+    /* OrisHome Premium — Dark palette */
+    --background: 150 20% 10%;
+    --foreground: 43 30% 95%;
+    --card: 150 18% 12%;
+    --card-foreground: 43 30% 95%;
+    --popover: 150 20% 10%;
+    --popover-foreground: 43 30% 95%;
+    --primary: 43 30% 75%;
+    --primary-foreground: 150 20% 10%;
+    --secondary: 150 15% 20%;
+    --secondary-foreground: 43 30% 95%;
+    --muted: 150 12% 18%;
+    --muted-foreground: 43 20% 70%;
+    --accent: 34 36% 65%;
+    --accent-foreground: 150 20% 10%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 150 12% 22%;
+    --input: 150 12% 22%;
+    --ring: 43 30% 75%;
+
+    --warm-cream: 150 20% 10%;
+    --warm-beige: 150 15% 20%;
+    --warm-brown: 43 30% 75%;
+    --dark-wood: 43 30% 95%;
+    --gold-accent: 38 45% 55%;
+    --sage-green: 43 30% 75%;
+
+    --media-foreground: 0 0% 100%;
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --whatsapp: 142 70% 42%;
+    --whatsapp-foreground: 0 0% 100%;
+
+    --shadow-sm: 0 1px 2px hsl(0 0% 0% / 0.2), 0 1px 3px hsl(0 0% 0% / 0.15);
+    --shadow-md: 0 4px 12px -4px hsl(0 0% 0% / 0.25), 0 2px 6px -2px hsl(0 0% 0% / 0.2);
+    --shadow-lg: 0 12px 32px -8px hsl(0 0% 0% / 0.35), 0 4px 12px -4px hsl(0 0% 0% / 0.25);
   }
 
   body {
@@ -69,6 +120,7 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
     letter-spacing: -0.02em;
+    font-weight: 600;
   }
 
   ::selection {
@@ -103,11 +155,11 @@
   }
 
   /* ============ ELEVATION SYSTEM (soft luxury shadows) ============ */
-  .shadow-soft-sm { box-shadow: 0 1px 2px hsl(var(--foreground) / 0.04), 0 1px 3px hsl(var(--foreground) / 0.04); }
-  .shadow-soft { box-shadow: 0 2px 8px -2px hsl(var(--foreground) / 0.06), 0 4px 16px -4px hsl(var(--foreground) / 0.05); }
-  .shadow-soft-md { box-shadow: 0 8px 24px -8px hsl(var(--foreground) / 0.10), 0 4px 12px -4px hsl(var(--foreground) / 0.06); }
-  .shadow-soft-lg { box-shadow: 0 20px 50px -20px hsl(var(--foreground) / 0.18), 0 8px 24px -8px hsl(var(--foreground) / 0.08); }
-  .shadow-soft-xl { box-shadow: 0 30px 80px -25px hsl(var(--foreground) / 0.25), 0 12px 30px -12px hsl(var(--foreground) / 0.10); }
+  .shadow-soft-sm { box-shadow: var(--shadow-sm); }
+  .shadow-soft { box-shadow: var(--shadow-md); }
+  .shadow-soft-md { box-shadow: var(--shadow-md); }
+  .shadow-soft-lg { box-shadow: var(--shadow-lg); }
+  .shadow-soft-xl { box-shadow: 0 30px 80px -25px hsl(var(--foreground) / 0.18), 0 12px 30px -12px hsl(var(--foreground) / 0.10); }
 
   .shadow-warm { box-shadow: 0 4px 20px -4px hsl(var(--warm-brown) / 0.15); }
   .shadow-warm-lg { box-shadow: 0 10px 40px -10px hsl(var(--warm-brown) / 0.2); }
