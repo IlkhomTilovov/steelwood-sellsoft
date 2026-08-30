@@ -38,7 +38,7 @@ interface SystemSettingsData {
 }
 
 const defaultSettings: Omit<SystemSettingsData, 'id'> = {
-  site_name: 'OrisHome',
+  site_name: 'SteelWood',
   logo_url: null,
   favicon_url: null,
   contact_phone: '',
@@ -358,7 +358,7 @@ export default function SystemSettings() {
                 <Input
                   value={formData.site_name}
                   onChange={(e) => setFormData({ ...formData, site_name: e.target.value })}
-                  placeholder="OrisHome"
+                  placeholder="SteelWood"
                 />
                 <p className="text-xs text-muted-foreground">
                   {t.siteNameHint}
@@ -676,7 +676,7 @@ export default function SystemSettings() {
                 <Input
                   value={formData.seo_title || ''}
                   onChange={(e) => setFormData({ ...formData, seo_title: e.target.value })}
-                  placeholder="OrisHome - Premium mebel va interyer"
+                  placeholder="SteelWood - Premium mebel va interyer"
                 />
                 <div className="flex justify-between text-xs text-muted-foreground">
                   <span>{t.seoTitleHint}</span>

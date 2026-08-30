@@ -64,7 +64,7 @@ export default function SetsAdmin() {
   const handleImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 5 * 1024 * 1024) { toast.error(t.imageSizeError); return; }
+    if (file.size > 10 * 1024 * 1024) { toast.error(t.imageSizeError); return; }
     setUploading(true);
     try {
       const webp = await convertImageToWebP(file);

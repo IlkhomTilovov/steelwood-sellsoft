@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* OrisHome Premium Design System — Inter (body) + Cormorant Garamond (headings) */
+/* SteelWood Premium Design System — Inter (body) + Cormorant Garamond (headings) */
 
 @layer base {
   * {
@@ -14,7 +14,7 @@
     --font-serif: 'Cormorant Garamond', Georgia, serif;
     --font-heading: 'Cormorant Garamond', Georgia, serif;
 
-    /* OrisHome Premium — Light palette */
+    /* SteelWood Premium — Light palette */
     --background: 43 30% 95%;
     --foreground: 0 0% 13%;
     --card: 43 26% 97%;
@@ -35,7 +35,7 @@
     --input: 34 30% 85%;
     --ring: 153 30% 17%;
 
-    /* Legacy warm tokens — mapped to OrisHome palette */
+    /* Legacy warm tokens — mapped to SteelWood palette */
     --warm-cream: 43 30% 95%;
     --warm-beige: 34 36% 75%;
     --warm-brown: 153 30% 17%;
@@ -68,7 +68,7 @@
   }
 
   .dark {
-    /* OrisHome Premium — Dark palette */
+    /* SteelWood Premium — Dark palette */
     --background: 150 20% 10%;
     --foreground: 43 30% 95%;
     --card: 150 18% 12%;

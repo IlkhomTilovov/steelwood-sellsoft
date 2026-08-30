@@ -550,7 +550,7 @@ export function Header() {
                   </nav>
 
                   <div className="px-6 py-4 border-t border-border text-[11px] text-muted-foreground">
-                    {brandName || 'OrisHome'} · {language === 'ru' ? 'Premium мебель' : 'Premium mebel'}
+                    {brandName || 'SteelWood'} · {language === 'ru' ? 'Premium мебель' : 'Premium mebel'}
                   </div>
                 </aside>
 

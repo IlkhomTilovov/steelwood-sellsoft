@@ -627,6 +627,10 @@ export default function ProductsNew() {
     try {
       for (let i = 0; i < files.length; i++) {
         const originalFile = files[i];
+        if (originalFile.size > 10 * 1024 * 1024) {
+          toast({ variant: 'destructive', title: 'Xatolik', description: `${originalFile.name}: rasm hajmi 10MB dan oshmasligi kerak` });
+          continue;
+        }
         const file = originalFile.type.startsWith('image/')
           ? await convertImageToWebP(originalFile)
           : originalFile;

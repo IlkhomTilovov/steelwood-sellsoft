@@ -444,7 +444,7 @@ export default function Index() {
             <button
               onClick={() => goCat(-1)}
               disabled={catTotalPages <= 1}
-              className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-border hover:border-foreground/40 hover:bg-card transition-colors flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed"
+              className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-[#f46734]/40 text-[#f46734] hover:border-[#f46734] hover:bg-[#f46734]/10 transition-colors flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed"
               aria-label="Previous"
             >
               <ArrowLeft className="w-4 h-4" />
@@ -452,7 +452,7 @@ export default function Index() {
             <button
               onClick={() => goCat(1)}
               disabled={catTotalPages <= 1}
-              className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-border hover:border-foreground/40 hover:bg-card transition-colors flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed"
+              className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-[#f46734]/40 text-[#f46734] hover:border-[#f46734] hover:bg-[#f46734]/10 transition-colors flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed"
               aria-label="Next"
             >
               <ArrowRight className="w-4 h-4" />
@@ -538,7 +538,7 @@ export default function Index() {
                   onClick={() => { setCatAnimate(true); setCatIndex(i * catPerPage); }}
                   aria-label={`Page ${i + 1}`}
                   className={`h-1.5 rounded-full transition-all duration-300 ${
-                    active ? 'w-8 bg-foreground' : 'w-1.5 bg-foreground/30 hover:bg-foreground/50'
+                    active ? 'w-8 bg-[#f46734]' : 'w-1.5 bg-[#f46734]/30 hover:bg-[#f46734]/50'
                   }`}
                 />
               );

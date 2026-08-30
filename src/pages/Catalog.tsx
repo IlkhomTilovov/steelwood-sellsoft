@@ -567,7 +567,7 @@ export default function Catalog() {
                   )}
                 </div>
                 <div className="px-5 py-4 border-t border-border text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-                  {settings?.site_name || 'OrisHome'} · Premium mebel
+                  {settings?.site_name || 'SteelWood'} · Premium mebel
                 </div>
               </SheetContent>
             </Sheet>

@@ -44,7 +44,7 @@ const RADIUS_OPTIONS = [
 
 const THEME_PRESETS = [
   {
-    name: 'OrisHome Premium',
+    name: 'SteelWood Premium',
     tagline: 'Deep Green + Warm Sand',
     values: {
       isDark: false,

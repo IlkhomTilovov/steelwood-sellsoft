@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Truck, RotateCcw, ShieldCheck, Headphones } from 'lucide-react';
@@ -43,52 +43,125 @@ export function CollectionBanners({
   loading: boolean;
   language: Lang;
 }) {
-  if (loading) {
-    return (
-      <section className="container mx-auto px-4 lg:px-8 mt-10 lg:mt-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
-          <div className="aspect-[16/9] rounded-[2rem] bg-muted/50 animate-pulse" />
-          <div className="aspect-[16/9] rounded-[2rem] bg-muted/50 animate-pulse" />
-        </div>
-      </section>
-    );
-  }
-
   // Admin panelda "Bosh sahifa bannerida ko'rsatish" yoqilgan toifalar ustuvor.
   // Bitta toifa belgilangan bo'lsa ham u birinchi o'rinda chiqadi, ikkinchi joy qolganlardan to'ldiriladi.
   const withImage = categories.filter((c) => c.image);
   const selected = withImage.filter((c) => c.show_in_banner);
   const others = withImage.filter((c) => !c.show_in_banner);
   const picks = [...selected, ...others].slice(0, 2);
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  // Mobilda (grid emas, karusel) har 5 soniyada avtomatik keyingi toifaga o'tadi.
+  // Foydalanuvchi qo'lda sudrayotganda (pointerdown) vaqtincha to'xtaydi.
+  useEffect(() => {
+    if (loading || picks.length < 2) return;
+    const el = scrollRef.current;
+    const mql = window.matchMedia('(max-width: 767px)');
+    let timer: ReturnType<typeof setInterval> | null = null;
+
+    const stop = () => {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+    };
+    const start = () => {
+      stop();
+      if (mql.matches) {
+        timer = setInterval(() => {
+          setActiveIndex((prev) => (prev + 1) % picks.length);
+        }, 5000);
+      }
+    };
+
+    start();
+    mql.addEventListener('change', start);
+    el?.addEventListener('pointerdown', stop);
+    el?.addEventListener('pointerup', start);
+    el?.addEventListener('pointercancel', start);
+
+    return () => {
+      stop();
+      mql.removeEventListener('change', start);
+      el?.removeEventListener('pointerdown', stop);
+      el?.removeEventListener('pointerup', start);
+      el?.removeEventListener('pointercancel', start);
+    };
+  }, [loading, picks.length]);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const child = el.children[activeIndex] as HTMLElement | undefined;
+    if (!child) return;
+    // el.scrollTo, not child.scrollIntoView: scrollIntoView can also move the
+    // page's own vertical scroll position (e.g. to bring an off-screen card
+    // into view), which yanked the whole page back to this section every
+    // autoplay tick. Scrolling only this container's scrollLeft never
+    // touches page scroll.
+    el.scrollTo({ left: child.offsetLeft, behavior: 'smooth' });
+  }, [activeIndex]);
+
+  if (loading) {
+    return (
+      <section className="container mx-auto px-4 lg:px-8 mt-10 lg:mt-16">
+        <div className="flex gap-4 md:grid md:grid-cols-2 md:gap-6">
+          <div className="shrink-0 w-full sm:w-[60%] md:w-auto aspect-[16/9] rounded-[2rem] bg-muted/50 animate-pulse" />
+          <div className="shrink-0 w-full sm:w-[60%] md:w-auto aspect-[16/9] rounded-[2rem] bg-muted/50 animate-pulse" />
+        </div>
+      </section>
+    );
+  }
+
   if (picks.length < 2) return null;
 
   return (
     <section className="container mx-auto px-4 lg:px-8 mt-10 lg:mt-16">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+      <div
+        ref={scrollRef}
+        className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide gap-4 md:grid md:grid-cols-2 md:gap-6 md:overflow-visible md:snap-none"
+      >
         {picks.map((cat, i) => {
           const name = language === 'uz' ? cat.name_uz : cat.name_ru;
           return (
             <Link
               key={cat.id}
               to={`/catalog?category=${cat.slug}`}
-              className={`group relative overflow-hidden rounded-[2rem] shadow-soft hover:shadow-soft-lg transition-all duration-500 ease-luxe ${
+              className={`group relative shrink-0 w-full sm:w-[60%] md:w-auto snap-start overflow-hidden rounded-[2rem] shadow-soft hover:shadow-soft-lg transition-all duration-500 ease-luxe ${
                 i === 0 ? 'bg-secondary' : 'bg-muted'
               }`}
             >
               <div className="grid grid-cols-[1fr_1.1fr] items-center min-h-[210px] lg:min-h-[260px]">
-                <div className="p-6 lg:p-9">
-                  <h3 className="font-serif text-2xl lg:text-3xl font-bold text-foreground leading-tight">
-                    {name}
-                  </h3>
-                  <p className="mt-2 text-sm text-muted-foreground/80 max-w-[22ch]">
-                    {language === 'uz'
-                      ? 'Zamonaviy dizayn, uzoq muddatli sifat.'
-                      : 'Современный дизайн, долговечное качество.'}
-                  </p>
-                  <span className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-foreground">
-                    {language === 'uz' ? 'Ko‘rish' : 'Смотреть'}
-                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                  </span>
+                <div className="relative self-stretch flex flex-col justify-center overflow-hidden p-6 lg:p-9">
+                  {/* Fon texturasi — yog'och parket (herringbone) naqsh, faqat o'ng chetda (rasmga tutash joyda), #f46734 rangida, juda xira */}
+                  <div
+                    className="absolute inset-y-0 right-0 w-16 lg:w-24 pointer-events-none opacity-[0.12]"
+                    style={{
+                      color: '#f46734',
+                      backgroundImage:
+                        'linear-gradient(135deg, currentColor 25%, transparent 25%), linear-gradient(225deg, currentColor 25%, transparent 25%), linear-gradient(45deg, currentColor 25%, transparent 25%), linear-gradient(315deg, currentColor 25%, transparent 25%)',
+                      backgroundPosition: '10px 0, 10px 0, 0 0, 0 0',
+                      backgroundSize: '20px 20px',
+                      maskImage: 'linear-gradient(to left, black 45%, transparent 100%)',
+                      WebkitMaskImage: 'linear-gradient(to left, black 45%, transparent 100%)',
+                    }}
+                  />
+                  <div className="relative">
+                    <h3 className="font-serif text-2xl lg:text-3xl font-bold text-foreground leading-tight">
+                      {name}
+                    </h3>
+                    <p className="mt-2 text-sm text-muted-foreground/80 max-w-[22ch]">
+                      {language === 'uz'
+                        ? 'Zamonaviy dizayn, uzoq muddatli sifat.'
+                        : 'Современный дизайн, долговечное качество.'}
+                    </p>
+                    <span className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-foreground">
+                      {language === 'uz' ? 'Ko‘rish' : 'Смотреть'}
+                      <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                    </span>
+                  </div>
                 </div>
                 <div className="relative h-full min-h-[210px] lg:min-h-[260px]">
                   <LazyImage

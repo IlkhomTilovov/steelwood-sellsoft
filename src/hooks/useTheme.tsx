@@ -8,7 +8,7 @@ const THEME_READY_KEY = 'furniture-theme-ready';
 // Current live theme inlined as a first-paint fallback so mobile users do not
 // wait for a backend round-trip before the LCP hero can render.
 const DEFAULT_ACTIVE_THEME: Theme = {
-  name: 'OrisHome Premium',
+  name: 'SteelWood Premium',
   slug: 'orishome-premium',
   colorPalette: {
     background: '43 30% 95%',
@@ -228,7 +228,17 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const setActiveTheme = async (themeId: string) => {
     try {
       const themeToActivate = themes.find(t => t.id === themeId);
-      
+
+      // Ensure only one theme is ever active: clear all others first,
+      // then activate the target. Two statements because Postgres/PostgREST
+      // has no single-row-exclusive "set active" primitive here.
+      const { error: clearError } = await supabase
+        .from('themes')
+        .update({ is_active: false })
+        .neq('id', themeId);
+
+      if (clearError) throw clearError;
+
       const { error } = await supabase
         .from('themes')
         .update({ is_active: true })
