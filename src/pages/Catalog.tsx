@@ -24,7 +24,6 @@ export default function Catalog() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [catalogDrawerOpen, setCatalogDrawerOpen] = useState(false);
-  const [drawerSectionId, setDrawerSectionId] = useState<string | null>(null);
   const [expandedParents, setExpandedParents] = useState<Record<string, boolean>>({});
   
   const initialCategoryParam = searchParams.get('category') || 'all';
@@ -191,7 +190,28 @@ export default function Catalog() {
   // to avoid showing stale products from the previous category.
   const categorySyncing =
     resolvedCategoryId === null || resolvedCategoryId !== sidebarFilters.categoryId;
-  const loading = productsLoading || categorySyncing;
+
+  // If a filter/category change lands us on a page number that no longer exists
+  // for the new result set (e.g. switching from a category with many pages to one
+  // with fewer), the fetch legitimately returns 0 rows for that stale page even
+  // though totalCount > 0 — which briefly rendered "Mahsulot topilmadi" before the
+  // page-reset effect below caught up. Treat that combination as still-settling too.
+  const pageOutOfRange = !productsLoading && totalCount > 0 && products.length === 0 && currentPage > 1;
+
+  // While a ?set= is in the URL but its product_ids haven't been fetched yet
+  // (setProductIds still null), the filters below fall back to an empty array,
+  // so useProducts short-circuits to a real "0 products" result instantly —
+  // before the set's actual product list has even been requested. Treat that
+  // window as loading too instead of showing "Mahsulot topilmadi" for a beat.
+  const setSyncing = !!setId && setProductIds === null;
+
+  const loading = productsLoading || categorySyncing || pageOutOfRange || setSyncing;
+
+  // Snap back to page 1 once we know the current page is out of range for the
+  // active filters, instead of leaving an empty "not found" state on screen.
+  useEffect(() => {
+    if (pageOutOfRange) setCurrentPage(1);
+  }, [pageOutOfRange]);
 
   // --- Scroll position preservation across product detail navigation ---
   const location = useLocation();
@@ -400,88 +420,41 @@ export default function Catalog() {
               <SheetContent side="left" className="w-[320px] sm:w-[340px] h-auto inset-y-4 left-4 p-0 flex flex-col rounded-3xl border shadow-2xl [&>button]:hidden">
                 <SheetHeader className="px-5 pt-6 pb-4 space-y-0">
                   <SheetTitle className="text-lg flex items-center gap-3">
-                    {drawerSectionId ? (
-                      <button
-                        onClick={() => setDrawerSectionId(null)}
-                        className="w-9 h-9 rounded-full bg-muted flex items-center justify-center hover:bg-muted/70"
-                        aria-label="back"
-                      >
-                        <ChevronLeft className="w-4 h-4" />
-                      </button>
-                    ) : (
-                      <span className="w-9 h-9 rounded-full bg-muted flex items-center justify-center">
-                        <LayoutGrid className="w-4 h-4" />
-                      </span>
-                    )}
+                    <span className="w-9 h-9 rounded-full bg-muted flex items-center justify-center">
+                      <LayoutGrid className="w-4 h-4" />
+                    </span>
                     <span className="font-semibold">
-                      {drawerSectionId
-                        ? (language === 'uz'
-                            ? sections.find(s => s.id === drawerSectionId)?.name_uz
-                            : sections.find(s => s.id === drawerSectionId)?.name_ru)
-                        : (language === 'uz' ? 'Katalog' : 'Каталог')}
+                      {language === 'uz' ? 'Katalog' : 'Каталог'}
                     </span>
                   </SheetTitle>
                 </SheetHeader>
                 <div className="flex-1 overflow-y-auto px-3 pb-3">
-                  {!drawerSectionId ? (
-                    <>
-                      <button
-                        onClick={() => {
-                          setSearchParams(prev => {
-                            const p = new URLSearchParams(prev);
-                            p.delete('category');
-                            p.delete('section');
-                            p.delete('page');
-                            return p;
-                          });
-                          setCatalogDrawerOpen(false);
-                        }}
-                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-colors hover:bg-muted text-foreground"
-                      >
-                        <LayoutGrid className="w-[18px] h-[18px]" strokeWidth={1.75} />
-                        <span className="text-sm font-medium">
-                          {language === 'uz' ? 'Barcha tovarlar' : 'Все товары'}
-                        </span>
-                      </button>
+                  <button
+                    onClick={() => {
+                      setSearchParams(prev => {
+                        const p = new URLSearchParams(prev);
+                        p.delete('category');
+                        p.delete('section');
+                        p.delete('page');
+                        return p;
+                      });
+                      setCatalogDrawerOpen(false);
+                    }}
+                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-colors hover:bg-muted text-foreground"
+                  >
+                    <LayoutGrid className="w-[18px] h-[18px]" strokeWidth={1.75} />
+                    <span className="text-sm font-medium">
+                      {language === 'uz' ? 'Barcha tovarlar' : 'Все товары'}
+                    </span>
+                  </button>
 
-                      <div className="my-3 border-t border-border" />
+                  <div className="my-3 border-t border-border" />
 
-                      <p className="px-3 mb-1.5 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                        {language === 'uz' ? "Bo'limlar" : 'Разделы'}
-                      </p>
-                      <ul className="space-y-0.5">
-                        {[
-                          ...sections.map(s => ({
-                            id: s.id,
-                            name: language === 'uz' ? s.name_uz : s.name_ru,
-                            parents: categories.filter(c => !c.parent_id && c.section_id === s.id),
-                          })),
-                          {
-                            id: '__none__',
-                            name: language === 'uz' ? 'Boshqa' : 'Другое',
-                            parents: categories.filter(c => !c.parent_id && !c.section_id),
-                          },
-                        ]
-                          .filter(sec => sec.parents.length > 0)
-                          .map(section => (
-                            <li key={section.id}>
-                              <button
-                                onClick={() => setDrawerSectionId(section.id)}
-                                className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left hover:bg-muted text-foreground"
-                              >
-                                <span className="text-sm font-medium">{section.name}</span>
-                                <ChevronRight className="w-4 h-4 text-muted-foreground" />
-                              </button>
-                            </li>
-                          ))}
-                      </ul>
-                    </>
-                  ) : (
-                    <ul className="space-y-0.5">
-                      {(drawerSectionId === '__none__'
-                        ? categories.filter(c => !c.parent_id && !c.section_id)
-                        : categories.filter(c => !c.parent_id && c.section_id === drawerSectionId)
-                      ).map(parent => {
+                  <p className="px-3 mb-1.5 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                    {language === 'uz' ? 'Toifalar' : 'Категории'}
+                  </p>
+                  <ul className="space-y-0.5">
+                    {categories.filter(c => !c.parent_id).map(parent => {
                         const subs = categories.filter(c => c.parent_id === parent.id);
                         const isActive = sidebarFilters.categoryId === parent.id;
                         const isExpanded = expandedParents[parent.id] ?? isActive;
@@ -501,7 +474,6 @@ export default function Catalog() {
                                     return p;
                                   });
                                   setCatalogDrawerOpen(false);
-                                  setDrawerSectionId(null);
                                 }}
                                 className="flex-1 flex items-center gap-3 px-3 py-2.5 text-left min-w-0"
                               >
@@ -546,7 +518,6 @@ export default function Catalog() {
                                           return p;
                                         });
                                         setCatalogDrawerOpen(false);
-                                        setDrawerSectionId(null);
                                       }}
                                       className={`w-full text-left text-[13px] px-2 py-1.5 rounded-md transition-colors ${
                                         sidebarFilters.categoryId === sub.id
@@ -564,7 +535,6 @@ export default function Catalog() {
                         );
                       })}
                     </ul>
-                  )}
                 </div>
                 <div className="px-5 py-4 border-t border-border text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
                   {settings?.site_name || 'SteelWood'} · Premium mebel

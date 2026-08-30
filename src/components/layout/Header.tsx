@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { X, ShoppingBag, Phone, ChevronDown, ChevronRight, LayoutGrid, Tag, Sparkles, Search, Info, Shield, Send, Instagram } from 'lucide-react';
 import { lazy, Suspense, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useCart } from '@/hooks/useCart';
 import { useSystemSettings } from '@/hooks/useSystemSettings';
-import { useCategories, useSections, type Product } from '@/hooks/useProducts';
+import { useCategories, type Product } from '@/hooks/useProducts';
 import { supabase } from '@/integrations/supabase/client';
 
 const CartDrawer = lazy(() => import('@/components/CartDrawer').then((m) => ({ default: m.CartDrawer })));
@@ -18,6 +18,7 @@ export function Header() {
   const { language, setLanguage, t } = useLanguage();
   const { totalItems } = useCart();
   const location = useLocation();
+  const navigate = useNavigate();
   const { settings } = useSystemSettings();
 
   useEffect(() => {
@@ -36,7 +37,6 @@ export function Header() {
   const [mobileCatalogOpen, setMobileCatalogOpen] = useState(false);
   const shouldLoadCatalogData = catalogOpen || mobileCatalogOpen;
   const { categories } = useCategories(shouldLoadCatalogData);
-  const { sections } = useSections(shouldLoadCatalogData);
   const [mobileSectionId, setMobileSectionId] = useState<string | null>(null);
   
   
@@ -293,66 +293,50 @@ export function Header() {
 
                 {mobileCatalogOpen && (
                   <div className="ml-[26px] mt-1 mb-2 pl-4 border-l border-border/60">
-                    {mobileSectionId === null ? (
-                      <div className="flex flex-col">
-                        {sections.map((section) => {
-                          const hasCats = categories.some((c) => !c.parent_id && c.section_id === section.id);
-                          return (
-                            <button
-                              key={section.id}
-                              type="button"
-                              onClick={() => {
-                                if (hasCats) {
-                                  setMobileSectionId(section.id);
-                                } else {
-                                  setIsOpen(false);
-                                  setMobileCatalogOpen(false);
-                                  window.location.href = `/catalog?section=${section.slug}`;
-                                }
-                              }}
-                              className="w-full flex items-center justify-between px-3 py-2.5 text-[13.5px] font-medium text-foreground/90 hover:text-primary hover:bg-muted/60 rounded-lg transition-colors text-left"
-                            >
-                              <span>{language === 'ru' ? section.name_ru : section.name_uz}</span>
-                              {hasCats && <ChevronRight className="w-4 h-4 text-muted-foreground" />}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    ) : (() => {
-                      const section = sections.find((s) => s.id === mobileSectionId);
-                      const cats = categories.filter((c) => !c.parent_id && c.section_id === mobileSectionId);
-                      return (
-                        <div className="flex flex-col">
-                          <button
-                            type="button"
-                            onClick={() => setMobileSectionId(null)}
-                            className="flex items-center gap-1.5 px-3 py-2 text-[12.5px] font-medium text-muted-foreground hover:text-primary transition-colors"
-                          >
-                            <ChevronRight className="w-4 h-4 rotate-180" />
-                            {language === 'ru' ? 'Назад' : 'Orqaga'}
-                          </button>
-                          {section && (
-                            <Link
-                              to={`/catalog?section=${section.slug}`}
-                              onClick={() => { setIsOpen(false); setMobileCatalogOpen(false); setMobileSectionId(null); }}
-                              className="px-3 py-2.5 text-[13.5px] font-semibold text-primary hover:bg-muted/60 rounded-lg block transition-colors"
-                            >
-                              {language === 'ru' ? `Все в «${section.name_ru}»` : `«${section.name_uz}» — barchasi`}
-                            </Link>
-                          )}
-                          {cats.map((cat) => (
-                            <Link
-                              key={cat.id}
-                              to={`/catalog?category=${cat.slug}`}
-                              onClick={() => { setIsOpen(false); setMobileCatalogOpen(false); setMobileSectionId(null); }}
-                              className="px-3 py-2.5 text-[13.5px] font-medium text-foreground/90 hover:text-primary hover:bg-muted/60 rounded-lg block transition-colors"
-                            >
-                              {language === 'ru' ? cat.name_ru : cat.name_uz}
-                            </Link>
-                          ))}
-                        </div>
-                      );
-                    })()}
+                    <div className="flex flex-col">
+                      {categories.filter((c) => !c.parent_id).map((cat) => {
+                        const subs = categories.filter((c2) => c2.parent_id === cat.id);
+                        const hasSubs = subs.length > 0;
+                        const isExpanded = mobileSectionId === cat.id;
+                        return (
+                          <div key={cat.id}>
+                            <div className="flex items-stretch">
+                              <Link
+                                to={`/catalog?category=${cat.slug}`}
+                                onClick={() => { setIsOpen(false); setMobileCatalogOpen(false); setMobileSectionId(null); }}
+                                className="flex-1 px-3 py-2.5 text-[13.5px] font-medium text-foreground/90 hover:text-primary hover:bg-muted/60 rounded-lg transition-colors"
+                              >
+                                {language === 'ru' ? cat.name_ru : cat.name_uz}
+                              </Link>
+                              {hasSubs && (
+                                <button
+                                  type="button"
+                                  onClick={() => setMobileSectionId(isExpanded ? null : cat.id)}
+                                  className="px-2 flex items-center text-muted-foreground hover:text-foreground"
+                                  aria-label="toggle"
+                                >
+                                  <ChevronDown className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                                </button>
+                              )}
+                            </div>
+                            {hasSubs && isExpanded && (
+                              <div className="ml-3 pl-3 border-l border-border/40">
+                                {subs.map((sub) => (
+                                  <Link
+                                    key={sub.id}
+                                    to={`/catalog?category=${sub.slug}`}
+                                    onClick={() => { setIsOpen(false); setMobileCatalogOpen(false); setMobileSectionId(null); }}
+                                    className="block px-3 py-2 text-[13px] text-muted-foreground hover:text-primary transition-colors"
+                                  >
+                                    {language === 'ru' ? sub.name_ru : sub.name_uz}
+                                  </Link>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 )}
 
@@ -432,20 +416,16 @@ export function Header() {
       {/* Floating Mega Menu */}
       {catalogOpen && createPortal(
         (() => {
-          const displaySections = [
-            ...sections.map((s) => ({
-              id: s.id,
-              name: language === 'ru' ? s.name_ru : s.name_uz,
-              parents: categories.filter((c) => !c.parent_id && c.section_id === s.id),
-            })),
-            {
-              id: '__none__',
-              name: language === 'ru' ? 'Другое' : 'Boshqa',
-              parents: categories.filter((c) => !c.parent_id && !c.section_id),
-            },
-          ].filter((s) => s.parents.length > 0);
+          const displayCategories = categories
+            .filter((c) => !c.parent_id)
+            .map((c) => ({
+              id: c.id,
+              slug: c.slug,
+              name: language === 'ru' ? c.name_ru : c.name_uz,
+              subs: categories.filter((sub) => sub.parent_id === c.id),
+            }));
 
-          const activeSection = displaySections.find((s) => s.id === activeSectionId);
+          const activeCategory = displayCategories.find((c) => c.id === activeSectionId);
 
           const formatPrice = (v: number | null) =>
             v == null ? '' : new Intl.NumberFormat('ru-RU').format(v) + " so'm";
@@ -524,25 +504,32 @@ export function Header() {
 
                   <div className="px-4 pb-2">
                     <p className="px-3 mb-2 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                      {language === 'ru' ? 'Разделы' : "Bo'limlar"}
+                      {language === 'ru' ? 'Категории' : 'Toifalar'}
                     </p>
                   </div>
 
                   <nav className="flex-1 overflow-y-auto px-4 pb-6 space-y-1">
-                    {displaySections.map((section) => {
-                      const isActive = activeSectionId === section.id;
+                    {displayCategories.map((cat) => {
+                      const isActive = activeSectionId === cat.id;
                       return (
                         <button
-                          key={section.id}
+                          key={cat.id}
                           type="button"
-                          onClick={() => setActiveSectionId(section.id)}
+                          onClick={() => {
+                            if (cat.subs.length > 0) {
+                              setActiveSectionId(cat.id);
+                            } else {
+                              setCatalogOpen(false);
+                              navigate(`/catalog?category=${cat.slug}`);
+                            }
+                          }}
                           className={`w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl text-left text-[13.5px] font-medium transition-all ${
                             isActive
                               ? 'bg-primary text-primary-foreground shadow-sm'
                               : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                           }`}
                         >
-                          <span className="truncate">{section.name}</span>
+                          <span className="truncate">{cat.name}</span>
                           <ChevronRight className={`w-4 h-4 transition-transform ${isActive ? 'translate-x-0.5' : 'opacity-50'}`} />
                         </button>
                       );
@@ -560,14 +547,14 @@ export function Header() {
                     <div className="flex items-center justify-between px-7 py-4 bg-card border-b border-border">
                       <div className="flex items-center gap-2 text-[13px] text-muted-foreground">
                         <span className="font-medium text-foreground">
-                          {activeSection
-                            ? activeSection.name
+                          {activeCategory
+                            ? activeCategory.name
                             : language === 'ru' ? 'Рекомендуем' : 'Tavsiya etamiz'}
                         </span>
-                        {activeSection && (
+                        {activeCategory && activeCategory.subs.length > 0 && (
                           <>
                             <ChevronRight className="w-3.5 h-3.5" />
-                            <span>{activeSection.parents.length} {language === 'ru' ? 'категорий' : 'kategoriya'}</span>
+                            <span>{activeCategory.subs.length} {language === 'ru' ? 'подкатегорий' : 'kichik toifa'}</span>
                           </>
                         )}
                       </div>
@@ -581,66 +568,45 @@ export function Header() {
                     </div>
 
                     <div className="flex-1 overflow-y-auto p-6">
-                      {activeSection ? (
+                      {activeCategory ? (
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                          {activeSection.parents.map((parent) => {
-                            const subs = categories.filter((c) => c.parent_id === parent.id);
-                            return (
-                              <div
-                                key={parent.id}
-                                className="bg-background rounded-2xl p-4 ring-1 ring-border hover:ring-primary/30 hover:shadow-sm transition-all"
-                              >
-                                <Link
-                                  to={`/catalog?category=${parent.slug}`}
-                                  onClick={() => setCatalogOpen(false)}
-                                  className="flex items-center gap-3 mb-3 group"
-                                >
-                                  {parent.image ? (
-                                    <img
-                                      src={parent.image}
-                                      alt=""
-                                      width={44}
-                                      height={44}
-                                      loading="lazy"
-                                      decoding="async"
-                                      className="w-11 h-11 rounded-xl object-cover shrink-0 ring-1 ring-border"
-                                    />
-                                  ) : (
-                                    <span className="w-11 h-11 rounded-xl bg-muted shrink-0" />
-                                  )}
-                                  <span className="text-[14px] font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2">
-                                    {language === 'ru' ? parent.name_ru : parent.name_uz}
-                                  </span>
-                                </Link>
-                                {subs.length > 0 && (
-                                  <ul className="space-y-0.5">
-                                    {subs.slice(0, 5).map((sub) => (
-                                      <li key={sub.id}>
-                                        <Link
-                                          to={`/catalog?category=${sub.slug}`}
-                                          onClick={() => setCatalogOpen(false)}
-                                          className="block text-[12.5px] py-1 text-muted-foreground hover:text-primary transition-colors"
-                                        >
-                                          · {language === 'ru' ? sub.name_ru : sub.name_uz}
-                                        </Link>
-                                      </li>
-                                    ))}
-                                    {subs.length > 5 && (
-                                      <li>
-                                        <Link
-                                          to={`/catalog?category=${parent.slug}`}
-                                          onClick={() => setCatalogOpen(false)}
-                                          className="block text-[12px] py-1 text-primary font-medium"
-                                        >
-                                          +{subs.length - 5} {language === 'ru' ? 'ещё' : "yana"}
-                                        </Link>
-                                      </li>
-                                    )}
-                                  </ul>
-                                )}
-                              </div>
-                            );
-                          })}
+                          <Link
+                            to={`/catalog?category=${activeCategory.slug}`}
+                            onClick={() => setCatalogOpen(false)}
+                            className="col-span-full flex items-center justify-between bg-background rounded-2xl p-4 ring-1 ring-border hover:ring-primary/30 hover:shadow-sm transition-all group"
+                          >
+                            <span className="text-[14px] font-semibold text-foreground group-hover:text-primary transition-colors">
+                              {language === 'ru'
+                                ? `Все в разделе «${activeCategory.name}»`
+                                : `«${activeCategory.name}» bo'yicha barchasi`}
+                            </span>
+                            <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" />
+                          </Link>
+                          {activeCategory.subs.map((sub) => (
+                            <Link
+                              key={sub.id}
+                              to={`/catalog?category=${sub.slug}`}
+                              onClick={() => setCatalogOpen(false)}
+                              className="bg-background rounded-2xl p-4 ring-1 ring-border hover:ring-primary/30 hover:shadow-sm transition-all flex items-center gap-3 group"
+                            >
+                              {sub.image ? (
+                                <img
+                                  src={sub.image}
+                                  alt=""
+                                  width={44}
+                                  height={44}
+                                  loading="lazy"
+                                  decoding="async"
+                                  className="w-11 h-11 rounded-xl object-cover shrink-0 ring-1 ring-border"
+                                />
+                              ) : (
+                                <span className="w-11 h-11 rounded-xl bg-muted shrink-0" />
+                              )}
+                              <span className="text-[14px] font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2">
+                                {language === 'ru' ? sub.name_ru : sub.name_uz}
+                              </span>
+                            </Link>
+                          ))}
                         </div>
                       ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full">

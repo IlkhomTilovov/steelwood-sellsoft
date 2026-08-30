@@ -15,6 +15,7 @@ import { useState, useRef, useEffect } from 'react';
 import { getPageSeo } from '@/lib/pageSeo';
 import { PROMO_ICONS } from '@/lib/promoIcons';
 import { CollectionBanners, DiscountBanner, InspirationSection } from '@/components/home/HomeSections';
+import { LazyImage } from '@/components/LazyImage';
 
 
 import serviceKitchen from '@/assets/service-kitchen.jpg';
@@ -413,12 +414,18 @@ export default function Index() {
   return (
     <div className="min-h-screen bg-background">
       {/* ============ HERO (to'plamlar bento) ============ */}
-      <HeroBento sets={sets as any} loading={setsLoading} language={language} />
+      <HeroBento
+        sets={sets as any}
+        loading={setsLoading}
+        language={language}
+        promoTiles={dbPromoTiles.slice(0, 4)}
+      />
 
 
-      {/* ============ PROMO TILES (DB-driven karusel) ============ */}
+      {/* ============ PROMO TILES (DB-driven karusel) — Hero'da ko'rsatilgan
+          birinchi 4 tasi bu yerda takrorlanmasligi uchun qolganlari chiqadi ============ */}
       <div ref={sec1.ref}>
-        <PromoCarousel tiles={dbPromoTiles} language={language} />
+        <PromoCarousel tiles={dbPromoTiles.slice(4)} language={language} />
       </div>
 
 
@@ -576,7 +583,7 @@ export default function Index() {
 
 
 
-      {/* ============ FEATURED PRODUCTS GRID (only if we have more) ============ */}
+      {/* ============ FEATURED PRODUCTS — bento (3 kichik + 1 katta) ============ */}
       {featuredProducts.length > 2 && (
         <section className="container mx-auto px-4 lg:px-8 mt-16 lg:mt-24 pb-16 lg:pb-24">
           <div className="flex items-end justify-between mb-8">
@@ -589,11 +596,68 @@ export default function Index() {
               </Link>
             </Button>
           </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-            {featuredProducts.slice(0, 4).map((p) => (
-              <ProductCard key={p.id} product={p} />
+
+          {/* 3 ta kichik kartochka */}
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+            {featuredProducts.slice(0, 3).map((p) => (
+              <ProductCard key={p.id} product={p} imageAspect="aspect-square" />
             ))}
           </div>
+
+          {/* 1 ta katta (bento) kartochka */}
+          {featuredProducts[3] && (() => {
+            const hero = featuredProducts[3];
+            const heroName = language === 'uz' ? hero.name_uz : hero.name_ru;
+            const heroUrl = ('slug' in hero && hero.slug) ? `/product/${hero.slug}` : `/product/${hero.id}`;
+            const heroPrice = hero.price || 0;
+            const heroOriginal = 'original_price' in hero ? hero.original_price : undefined;
+            const heroHasDiscount = !!(heroOriginal && heroOriginal > heroPrice);
+            const currency = language === 'uz' ? "so'm" : 'сум';
+            return (
+              <Link
+                to={heroUrl}
+                className="group mt-4 lg:mt-6 relative block overflow-hidden rounded-[2rem] bg-secondary shadow-soft hover:shadow-soft-lg transition-all duration-500 ease-luxe"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-[1.1fr_1fr] items-center min-h-[220px] lg:min-h-[280px]">
+                  <div className="relative order-1 h-56 overflow-hidden md:order-2 md:h-full">
+                    <LazyImage
+                      src={hero.images?.[0] || '/placeholder.svg'}
+                      alt={heroName}
+                      wrapperClassName="absolute inset-0"
+                      className="w-full h-full object-cover transition-transform duration-700 ease-luxe group-hover:scale-105"
+                    />
+                    {heroHasDiscount && (
+                      <span className="absolute left-4 top-4 rounded-lg bg-foreground px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-background shadow-soft-sm">
+                        −{Math.round((1 - heroPrice / (heroOriginal as number)) * 100)}%
+                      </span>
+                    )}
+                  </div>
+                  <div className="order-2 p-6 md:order-1 lg:p-10">
+                    <span className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground/80">
+                      {language === 'uz' ? 'Tavsiya etamiz' : 'Рекомендуем'}
+                    </span>
+                    <h3 className="mt-3 font-serif text-2xl font-bold leading-tight text-foreground lg:text-4xl">
+                      {heroName}
+                    </h3>
+                    <div className="mt-4 flex items-baseline gap-2">
+                      {heroHasDiscount && (
+                        <span className="text-sm text-muted-foreground line-through tabular-nums">
+                          {(heroOriginal as number).toLocaleString('uz-UZ')} {currency}
+                        </span>
+                      )}
+                      <span className="font-sans text-xl font-bold tabular-nums text-foreground lg:text-2xl">
+                        {heroPrice.toLocaleString('uz-UZ')} {currency}
+                      </span>
+                    </div>
+                    <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-foreground">
+                      {language === 'uz' ? 'Ko‘rish' : 'Смотреть'}
+                      <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            );
+          })()}
         </section>
       )}
 
