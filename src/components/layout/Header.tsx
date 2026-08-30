@@ -22,9 +22,25 @@ export function Header() {
   const { settings } = useSystemSettings();
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
+    // Hysteresis (60px to turn on, 20px to turn off) instead of one fixed
+    // threshold — otherwise a scroll position hovering right around 50px
+    // (slow scrolling, mobile elastic overscroll bounce) flips `scrolled`
+    // back and forth every frame, flickering the header's bg/padding.
+    // requestAnimationFrame also caps this to once per frame during
+    // fast/continuous scroll.
+    let raf = 0;
+    const handleScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        setScrolled((prev) => (prev ? window.scrollY > 20 : window.scrollY > 60));
+      });
+    };
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, []);
 
   useEffect(() => {

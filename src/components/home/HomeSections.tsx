@@ -129,17 +129,15 @@ export function CollectionBanners({
             <Link
               key={cat.id}
               to={`/catalog?category=${cat.slug}`}
-              className={`group relative shrink-0 w-full sm:w-[60%] md:w-auto snap-start overflow-hidden rounded-[2rem] shadow-soft hover:shadow-soft-lg transition-all duration-500 ease-luxe ${
-                i === 0 ? 'bg-secondary' : 'bg-muted'
-              }`}
+              className="group relative shrink-0 w-full sm:w-[60%] md:w-auto snap-start overflow-hidden rounded-[2rem] bg-[#f46734] shadow-soft hover:shadow-soft-lg transition-all duration-500 ease-luxe"
             >
               <div className="grid grid-cols-[1fr_1.1fr] items-center min-h-[210px] lg:min-h-[260px]">
                 <div className="relative self-stretch flex flex-col justify-center overflow-hidden p-6 lg:p-9">
                   {/* Fon texturasi — yog'och parket (herringbone) naqsh, faqat o'ng chetda (rasmga tutash joyda), #f46734 rangida, juda xira */}
                   <div
-                    className="absolute inset-y-0 right-0 w-16 lg:w-24 pointer-events-none opacity-[0.12]"
+                    className="absolute inset-y-0 right-0 w-16 lg:w-24 pointer-events-none opacity-[0.18]"
                     style={{
-                      color: '#f46734',
+                      color: '#ffffff',
                       backgroundImage:
                         'linear-gradient(135deg, currentColor 25%, transparent 25%), linear-gradient(225deg, currentColor 25%, transparent 25%), linear-gradient(45deg, currentColor 25%, transparent 25%), linear-gradient(315deg, currentColor 25%, transparent 25%)',
                       backgroundPosition: '10px 0, 10px 0, 0 0, 0 0',
@@ -149,15 +147,15 @@ export function CollectionBanners({
                     }}
                   />
                   <div className="relative">
-                    <h3 className="font-serif text-2xl lg:text-3xl font-bold text-foreground leading-tight">
+                    <h3 className="font-serif text-2xl lg:text-3xl font-bold text-white leading-tight">
                       {name}
                     </h3>
-                    <p className="mt-2 text-sm text-muted-foreground/80 max-w-[22ch]">
+                    <p className="mt-2 text-sm text-white/80 max-w-[22ch]">
                       {language === 'uz'
                         ? 'Zamonaviy dizayn, uzoq muddatli sifat.'
                         : 'Современный дизайн, долговечное качество.'}
                     </p>
-                    <span className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-foreground">
+                    <span className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-white">
                       {language === 'uz' ? 'Ko‘rish' : 'Смотреть'}
                       <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                     </span>

@@ -42,10 +42,11 @@ export function HeroBento({
   if (loading) {
     return (
       <section className="container mx-auto px-4 lg:px-8 pt-6 lg:pt-10">
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 lg:gap-6 mb-4 lg:mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 lg:gap-6 mb-4 lg:mb-6">
           <div className="aspect-square lg:aspect-auto lg:h-[300px] rounded-[2rem] bg-muted/50 animate-pulse" />
           <div className="aspect-square lg:aspect-auto lg:h-[300px] rounded-[2rem] bg-muted/50 animate-pulse" />
-          <div className="hidden sm:block aspect-square lg:aspect-auto lg:h-[300px] rounded-[2rem] bg-muted/50 animate-pulse" />
+          <div className="aspect-square lg:aspect-auto lg:h-[300px] rounded-[2rem] bg-muted/50 animate-pulse" />
+          <div className="aspect-square lg:aspect-auto lg:h-[300px] rounded-[2rem] bg-muted/50 animate-pulse" />
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
           <div className="h-[300px] lg:h-[420px] rounded-[2rem] bg-muted/50 animate-pulse" />
@@ -65,7 +66,7 @@ export function HeroBento({
   const [main, ...rest] = sets;
   const mainTitle = language === 'uz' ? main.title_uz : main.title_ru;
   const mainHref = setHref(main);
-  const topSets = rest.slice(0, 3);
+  const topSets = rest.slice(0, 4);
   const heroPromoTiles = promoTiles.slice(0, 4);
 
   return (
@@ -78,7 +79,9 @@ export function HeroBento({
               ? 'grid-cols-1'
               : topSets.length === 2
                 ? 'grid-cols-2'
-                : 'grid-cols-2 sm:grid-cols-3'
+                : topSets.length === 3
+                  ? 'grid-cols-2 sm:grid-cols-3'
+                  : 'grid-cols-2 sm:grid-cols-4'
           }`}
         >
           {topSets.map((s, i) => (
