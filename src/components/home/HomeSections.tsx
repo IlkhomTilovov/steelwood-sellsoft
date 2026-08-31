@@ -380,7 +380,7 @@ function InstagramVideoCard({ video, caption }: { video: InstagramVideoLike; cap
 
   return (
     <div className="overflow-hidden rounded-[2rem] bg-card shadow-soft hover:shadow-soft-lg transition-shadow duration-500 ease-luxe">
-      <div className="relative aspect-[4/5] overflow-hidden bg-black">
+      <div className="relative aspect-[9/16] overflow-hidden bg-black">
         <iframe
           src={embedSrc}
           title={caption || 'Instagram video'}
@@ -389,7 +389,7 @@ function InstagramVideoCard({ video, caption }: { video: InstagramVideoLike; cap
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
           className="absolute border-0"
-          style={{ top: '-82px', left: '-25%', width: '150%', height: '2400px' }}
+          style={{ top: '-54px', left: '-5%', width: '110%', height: '2400px' }}
         />
       </div>
       {caption && (
