@@ -5,6 +5,7 @@ import { ProductCard } from '@/components/ProductCard';
 import { useFeaturedProducts, useCategories } from '@/hooks/useProducts';
 import { useActiveSets } from '@/hooks/useSets';
 import { usePromoTiles } from '@/hooks/usePromoTiles';
+import { useInstagramVideos } from '@/hooks/useInstagramVideos';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useSEO } from '@/hooks/useSEO';
 import { EditableText } from '@/components/EditableText';
@@ -318,6 +319,7 @@ export default function Index() {
   const { categories, loading: categoriesLoading } = useCategories(shouldLoadBelowFoldData);
   const { data: dbPromoTiles = [] } = usePromoTiles();
   const { sets, productsBySet, loading: setsLoading } = useActiveSets(true);
+  const { data: instagramVideos = [], isLoading: instagramLoading } = useInstagramVideos(shouldLoadBelowFoldData);
 
   // Toifalarda eski hardcoded/fallback rasmlar umuman ko'rsatilmaydi.
   const categoriesLoaded = shouldLoadBelowFoldData && !categoriesLoading;
@@ -662,8 +664,12 @@ export default function Index() {
         </section>
       )}
 
-      {/* ============ ILHOM (to'plamlar) ============ */}
-      <InspirationSection sets={sets} loading={!shouldLoadBelowFoldData || setsLoading} language={language} />
+      {/* ============ ILHOM (Instagram videolar) ============ */}
+      <InspirationSection
+        videos={instagramVideos}
+        loading={!shouldLoadBelowFoldData || instagramLoading}
+        language={language}
+      />
 
 
 

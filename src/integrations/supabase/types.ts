@@ -340,6 +340,42 @@ export type Database = {
         }
         Relationships: []
       }
+      instagram_videos: {
+        Row: {
+          caption_ru: string | null
+          caption_uz: string | null
+          created_at: string
+          id: string
+          instagram_url: string | null
+          is_active: boolean
+          sort_order: number
+          updated_at: string
+          video_url: string | null
+        }
+        Insert: {
+          caption_ru?: string | null
+          caption_uz?: string | null
+          created_at?: string
+          id?: string
+          instagram_url?: string | null
+          is_active?: boolean
+          sort_order?: number
+          updated_at?: string
+          video_url?: string | null
+        }
+        Update: {
+          caption_ru?: string | null
+          caption_uz?: string | null
+          created_at?: string
+          id?: string
+          instagram_url?: string | null
+          is_active?: boolean
+          sort_order?: number
+          updated_at?: string
+          video_url?: string | null
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           created_at: string

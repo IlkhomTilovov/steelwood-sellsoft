@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Truck, RotateCcw, ShieldCheck, Headphones } from 'lucide-react';
+import { ArrowRight, Truck, RotateCcw, ShieldCheck, Headphones, Play, Instagram } from 'lucide-react';
 import { LazyImage } from '@/components/LazyImage';
 import { Button } from '@/components/ui/button';
 import { EditableText } from '@/components/EditableText';
+import { useResolvedInstagramVideoSrc } from '@/hooks/useInstagramVideos';
 
 type Lang = 'uz' | 'ru';
 
@@ -15,13 +16,6 @@ interface CategoryLike {
   name_ru: string;
   image?: string | null;
   show_in_banner?: boolean | null;
-}
-
-interface SetLike {
-  id: string;
-  title_uz: string;
-  title_ru: string;
-  image?: string | null;
 }
 
 interface ProductLike {
@@ -299,29 +293,114 @@ export function DiscountBanner({
   );
 }
 
-/* ============ 3. Ilhom bloki (to'plamlar) ============ */
+interface InstagramVideoLike {
+  id: string;
+  video_url?: string | null;
+  instagram_url?: string | null;
+  caption_uz?: string | null;
+  caption_ru?: string | null;
+}
+
+/**
+ * Bitta video kartochkasi. Instagram'ning o'zini iframe qilib joylashtirib
+ * bo'lmaydi (header/like/izoh tugmalarini boshqa domen bo'lgani uchun
+ * yashirib bo'lmaydi) — shuning uchun pasted Instagram havolasi
+ * `resolve-instagram-video` funksiyasi orqali to'g'ridan-to'g'ri video
+ * faylga aylantirilib, saytning o'zida <video> bilan ijro etiladi.
+ */
+function InstagramVideoCard({ video, caption }: { video: InstagramVideoLike; caption?: string | null }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [playing, setPlaying] = useState(false);
+  const { data, isLoading, isError } = useResolvedInstagramVideoSrc(video);
+
+  const toggle = () => {
+    const el = videoRef.current;
+    if (!el) return;
+    if (playing) {
+      el.pause();
+      setPlaying(false);
+    } else {
+      el.muted = false;
+      el.play().catch(() => {});
+      setPlaying(true);
+    }
+  };
+
+  if (isError) return null;
+
+  return (
+    <div className="overflow-hidden rounded-[2rem] bg-card shadow-soft hover:shadow-soft-lg transition-shadow duration-500 ease-luxe">
+      <div className="relative aspect-[4/5] bg-black overflow-hidden">
+        {isLoading || !data?.videoUrl ? (
+          <div className="absolute inset-0 flex items-center justify-center bg-muted animate-pulse" />
+        ) : (
+          <>
+            <video
+              ref={videoRef}
+              src={data.videoUrl}
+              poster={data.posterUrl}
+              className="absolute inset-0 w-full h-full object-cover cursor-pointer"
+              loop
+              playsInline
+              muted
+              preload="metadata"
+              onClick={toggle}
+              onEnded={() => setPlaying(false)}
+            />
+            {!playing && (
+              <div className="absolute inset-0 bg-black/10 flex items-center justify-center pointer-events-none">
+                <span className="w-14 h-14 rounded-full bg-background/95 flex items-center justify-center shadow-soft-lg">
+                  <Play className="w-5 h-5 text-foreground fill-foreground ml-0.5" />
+                </span>
+              </div>
+            )}
+          </>
+        )}
+        {video.instagram_url && (
+          <a
+            href={video.instagram_url}
+            target="_blank"
+            rel="noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="absolute top-4 right-4 w-8 h-8 rounded-full bg-background/90 flex items-center justify-center"
+            aria-label="Instagram"
+          >
+            <Instagram className="w-4 h-4 text-foreground" />
+          </a>
+        )}
+      </div>
+      {caption && (
+        <div className="p-5">
+          <h3 className="font-sans font-semibold text-base text-foreground">{caption}</h3>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ============ 3. Ilhom bloki (Instagram videolar) ============ */
 export function InspirationSection({
-  sets,
+  videos,
   loading,
   language,
 }: {
-  sets: SetLike[];
+  videos: InstagramVideoLike[];
   loading: boolean;
   language: Lang;
 }) {
   if (loading) {
     return (
       <section className="container mx-auto px-4 lg:px-8 mt-16 lg:mt-24">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="aspect-[4/3] rounded-[2rem] bg-muted/50 animate-pulse" />
+            <div key={i} className="aspect-[4/5] rounded-[2rem] bg-muted/50 animate-pulse" />
           ))}
         </div>
       </section>
     );
   }
 
-  const picks = sets.filter((s) => s.image).slice(0, 3);
+  const picks = videos.filter((v) => v.video_url || v.instagram_url).slice(0, 3);
   if (picks.length === 0) return null;
 
   return (
@@ -332,37 +411,18 @@ export function InspirationSection({
         </h2>
         <p className="mt-3 text-muted-foreground/80">
           {language === 'uz'
-            ? 'Tayyor to‘plamlar — uyingizni bir zumda yangilang.'
-            : 'Готовые комплекты — обновите дом за один шаг.'}
+            ? "Instagram'dagi so'nggi videolarimiz."
+            : 'Наши последние видео в Instagram.'}
         </p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
-        {picks.map((s) => {
-          const title = language === 'uz' ? s.title_uz : s.title_ru;
-          return (
-            <Link
-              key={s.id}
-              to={`/catalog?set=${s.id}`}
-              className="group overflow-hidden rounded-[2rem] bg-card shadow-soft hover:shadow-soft-lg transition-all duration-500 ease-luxe hover:-translate-y-1"
-            >
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <LazyImage
-                  src={s.image as string}
-                  alt={title}
-                    wrapperClassName="absolute inset-0"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-luxe"
-                />
-              </div>
-              <div className="p-5">
-                <h3 className="font-sans font-semibold text-base text-foreground">{title}</h3>
-                <span className="mt-2 inline-flex items-center gap-2 text-sm text-muted-foreground/80">
-                  {language === 'uz' ? 'To‘plamni ko‘rish' : 'Смотреть комплект'}
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </span>
-              </div>
-            </Link>
-          );
-        })}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+        {picks.map((v) => (
+          <InstagramVideoCard
+            key={v.id}
+            video={v}
+            caption={language === 'uz' ? v.caption_uz : v.caption_ru}
+          />
+        ))}
       </div>
     </section>
   );

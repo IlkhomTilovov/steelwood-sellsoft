@@ -28,6 +28,7 @@ import {
   PaintBucket,
   Cog,
   Images,
+  Instagram,
   LucideIcon,
 } from 'lucide-react';
 
@@ -83,6 +84,7 @@ const navGroups: NavGroup[] = [
     icon: PaintBucket,
     items: [
       { titleKey: 'navHeroSlides', url: '/admin/hero-slides', icon: Images, module: 'siteContent' },
+      { titleKey: 'navInstagramVideos', url: '/admin/instagram-videos', icon: Instagram, module: 'siteContent' },
       { titleKey: 'navSiteContent', url: '/admin/site-content', icon: FileText, module: 'siteContent' },
       { titleKey: 'navBranches', url: '/admin/branches', icon: MapPin, module: 'siteContent' },
       { titleKey: 'navCheckoutForm', url: '/admin/checkout-form', icon: ClipboardList, module: 'siteContent' },

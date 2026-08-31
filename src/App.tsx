@@ -61,6 +61,7 @@ const PromoTilesAdmin = lazyWithRetry(() => import("./pages/admin/PromoTiles"));
 const SetsAdmin = lazyWithRetry(() => import("./pages/admin/Sets"));
 const BranchesAdmin = lazyWithRetry(() => import("./pages/admin/Branches"));
 const HeroSlidesAdmin = lazyWithRetry(() => import("./pages/admin/HeroSlides"));
+const InstagramVideosAdmin = lazyWithRetry(() => import("./pages/admin/InstagramVideos"));
 
 
 const queryClient = new QueryClient({
@@ -201,6 +202,11 @@ const App = () => (
                           <Route path="hero-slides" element={
                             <ProtectedRoute module="siteContent">
                               <HeroSlidesAdmin />
+                            </ProtectedRoute>
+                          } />
+                          <Route path="instagram-videos" element={
+                            <ProtectedRoute module="siteContent">
+                              <InstagramVideosAdmin />
                             </ProtectedRoute>
                           } />
                           <Route path="branches" element={
