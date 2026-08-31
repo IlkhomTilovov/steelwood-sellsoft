@@ -347,16 +347,8 @@ function InstagramVideoCard({ video, caption }: { video: InstagramVideoLike; cap
     }
   };
 
-  useEffect(() => {
-    if (video.video_url || !video.instagram_url) return;
-    let cancelled = false;
-    loadInstagramEmbedScript().then(() => {
-      if (!cancelled) window.instgrm?.Embeds.process();
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [video.video_url, video.instagram_url]);
+
+
 
   if (video.video_url) {
     return (
