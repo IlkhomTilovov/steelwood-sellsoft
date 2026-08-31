@@ -2,13 +2,11 @@
 -- Instagram videos — homepage "Interyer uchun ilhom" section
 --
 -- `instagram_url` is the pasted Instagram post/reel link — the frontend
--- resolves it to a playable video URL at render time via the
--- `resolve-instagram-video` edge function (reads the public og:video meta
--- tag; unofficial, and the resolved CDN URL expires after a few hours, so it
--- is never stored — only re-resolved on each page load).
+-- renders it with Instagram's own official embed widget (embed.js), so the
+-- video plays right on the page with no backend involved.
 -- `video_url` is an optional manual override: a direct .mp4 link (or an
--- uploaded file) used instead of auto-resolving, for when a post can't be
--- auto-detected (private post, Instagram markup changed, etc.).
+-- uploaded file) played with a plain <video> tag instead of the Instagram
+-- embed, for when a post can't be embedded (private post, etc.).
 --
 -- NOTE: this project has no automated migration pipeline (see the note at
 -- the top of 20260831000000_reconstructed_schema.sql) — paste this file's

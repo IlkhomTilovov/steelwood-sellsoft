@@ -221,8 +221,8 @@ export default function InstagramVideosAdmin() {
               />
               <p className="mt-1 text-xs text-muted-foreground">
                 {language === 'ru'
-                  ? 'Видео автоматически определяется по этой ссылке и воспроизводится прямо на сайте (без интерфейса Instagram)'
-                  : "Video shu havoladan avtomatik aniqlanadi va saytning o'zida (Instagram interfeysisiz) ijro etiladi"}
+                  ? 'Видео показывается через официальный виджет Instagram прямо на сайте'
+                  : "Video Instagram'ning rasmiy vidjeti orqali saytning o'zida ko'rsatiladi"}
               </p>
             </div>
 

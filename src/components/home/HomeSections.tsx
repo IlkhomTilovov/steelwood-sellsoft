@@ -5,7 +5,6 @@ import { ArrowRight, Truck, RotateCcw, ShieldCheck, Headphones, Play, Instagram 
 import { LazyImage } from '@/components/LazyImage';
 import { Button } from '@/components/ui/button';
 import { EditableText } from '@/components/EditableText';
-import { useResolvedInstagramVideoSrc } from '@/hooks/useInstagramVideos';
 
 type Lang = 'uz' | 'ru';
 
@@ -301,17 +300,39 @@ interface InstagramVideoLike {
   caption_ru?: string | null;
 }
 
-/**
- * Bitta video kartochkasi. Instagram'ning o'zini iframe qilib joylashtirib
- * bo'lmaydi (header/like/izoh tugmalarini boshqa domen bo'lgani uchun
- * yashirib bo'lmaydi) — shuning uchun pasted Instagram havolasi
- * `resolve-instagram-video` funksiyasi orqali to'g'ridan-to'g'ri video
- * faylga aylantirilib, saytning o'zida <video> bilan ijro etiladi.
- */
+// Instagram's official embed widget (window.instgrm) turns a
+// `<blockquote class="instagram-media">` into the real Instagram post/reel
+// player. It's the officially supported way to show an Instagram video on
+// another site with no backend involved — no scraping, no link that expires
+// — at the cost of carrying Instagram's own chrome (like/comment count,
+// "View on Instagram", avatar) rather than a fully custom player.
+declare global {
+  interface Window {
+    instgrm?: { Embeds: { process: () => void } };
+  }
+}
+
+let instagramEmbedScriptPromise: Promise<void> | null = null;
+function loadInstagramEmbedScript(): Promise<void> {
+  if (window.instgrm) return Promise.resolve();
+  if (!instagramEmbedScriptPromise) {
+    instagramEmbedScriptPromise = new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'https://www.instagram.com/embed.js';
+      script.async = true;
+      script.onload = () => resolve();
+      document.body.appendChild(script);
+    });
+  }
+  return instagramEmbedScriptPromise;
+}
+
+/** Bitta video kartochkasi: `video_url` bo'lsa to'g'ridan-to'g'ri <video>
+ * bilan (qo'lda yuklangan/havola qilingan fayl), aks holda `instagram_url`
+ * Instagram'ning rasmiy embed vidjeti orqali ko'rsatiladi. */
 function InstagramVideoCard({ video, caption }: { video: InstagramVideoLike; caption?: string | null }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
-  const { data, isLoading, isError } = useResolvedInstagramVideoSrc(video);
 
   const toggle = () => {
     const el = videoRef.current;
@@ -326,54 +347,71 @@ function InstagramVideoCard({ video, caption }: { video: InstagramVideoLike; cap
     }
   };
 
-  if (isError) return null;
+  useEffect(() => {
+    if (video.video_url || !video.instagram_url) return;
+    let cancelled = false;
+    loadInstagramEmbedScript().then(() => {
+      if (!cancelled) window.instgrm?.Embeds.process();
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [video.video_url, video.instagram_url]);
 
-  return (
-    <div className="overflow-hidden rounded-[2rem] bg-card shadow-soft hover:shadow-soft-lg transition-shadow duration-500 ease-luxe">
-      <div className="relative aspect-[4/5] bg-black overflow-hidden">
-        {isLoading || !data?.videoUrl ? (
-          <div className="absolute inset-0 flex items-center justify-center bg-muted animate-pulse" />
-        ) : (
-          <>
-            <video
-              ref={videoRef}
-              src={data.videoUrl}
-              poster={data.posterUrl}
-              className="absolute inset-0 w-full h-full object-cover cursor-pointer"
-              loop
-              playsInline
-              muted
-              preload="metadata"
-              onClick={toggle}
-              onEnded={() => setPlaying(false)}
-            />
-            {!playing && (
-              <div className="absolute inset-0 bg-black/10 flex items-center justify-center pointer-events-none">
-                <span className="w-14 h-14 rounded-full bg-background/95 flex items-center justify-center shadow-soft-lg">
-                  <Play className="w-5 h-5 text-foreground fill-foreground ml-0.5" />
-                </span>
-              </div>
-            )}
-          </>
-        )}
-        {video.instagram_url && (
-          <a
-            href={video.instagram_url}
-            target="_blank"
-            rel="noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="absolute top-4 right-4 w-8 h-8 rounded-full bg-background/90 flex items-center justify-center"
-            aria-label="Instagram"
-          >
-            <Instagram className="w-4 h-4 text-foreground" />
-          </a>
+  if (video.video_url) {
+    return (
+      <div className="overflow-hidden rounded-[2rem] bg-card shadow-soft hover:shadow-soft-lg transition-shadow duration-500 ease-luxe">
+        <div className="relative aspect-[4/5] bg-black overflow-hidden">
+          <video
+            ref={videoRef}
+            src={video.video_url}
+            className="absolute inset-0 w-full h-full object-cover cursor-pointer"
+            loop
+            playsInline
+            muted
+            preload="metadata"
+            onClick={toggle}
+            onEnded={() => setPlaying(false)}
+          />
+          {!playing && (
+            <div className="absolute inset-0 bg-black/10 flex items-center justify-center pointer-events-none">
+              <span className="w-14 h-14 rounded-full bg-background/95 flex items-center justify-center shadow-soft-lg">
+                <Play className="w-5 h-5 text-foreground fill-foreground ml-0.5" />
+              </span>
+            </div>
+          )}
+          {video.instagram_url && (
+            <a
+              href={video.instagram_url}
+              target="_blank"
+              rel="noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-background/90 flex items-center justify-center"
+              aria-label="Instagram"
+            >
+              <Instagram className="w-4 h-4 text-foreground" />
+            </a>
+          )}
+        </div>
+        {caption && (
+          <div className="p-5">
+            <h3 className="font-sans font-semibold text-base text-foreground">{caption}</h3>
+          </div>
         )}
       </div>
-      {caption && (
-        <div className="p-5">
-          <h3 className="font-sans font-semibold text-base text-foreground">{caption}</h3>
-        </div>
-      )}
+    );
+  }
+
+  if (!video.instagram_url) return null;
+
+  return (
+    <div className="overflow-hidden rounded-[2rem] bg-card shadow-soft hover:shadow-soft-lg transition-shadow duration-500 ease-luxe [&_iframe]:!w-full">
+      <blockquote
+        className="instagram-media"
+        data-instgrm-permalink={video.instagram_url}
+        data-instgrm-version="14"
+        style={{ background: '#FFF', margin: 0, width: '100%' }}
+      />
     </div>
   );
 }
