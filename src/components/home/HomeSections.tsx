@@ -300,32 +300,10 @@ interface InstagramVideoLike {
   caption_ru?: string | null;
 }
 
-// Instagram's official embed widget (window.instgrm) turns a
-// `<blockquote class="instagram-media">` into the real Instagram post/reel
-// player. It's the officially supported way to show an Instagram video on
-// another site with no backend involved — no scraping, no link that expires
-// — at the cost of carrying Instagram's own chrome (like/comment count,
-// "View on Instagram", avatar) rather than a fully custom player.
-declare global {
-  interface Window {
-    instgrm?: { Embeds: { process: () => void } };
-  }
-}
+// Instagram post/reel havolasi `/embed/` iframe orqali ko'rsatiladi va
+// profil sarlavhasi hamda like/comment paneli konteynerdan tashqariga
+// chiqarilib kesiladi — natijada faqat videoning o'zi ko'rinadi.
 
-let instagramEmbedScriptPromise: Promise<void> | null = null;
-function loadInstagramEmbedScript(): Promise<void> {
-  if (window.instgrm) return Promise.resolve();
-  if (!instagramEmbedScriptPromise) {
-    instagramEmbedScriptPromise = new Promise((resolve) => {
-      const script = document.createElement('script');
-      script.src = 'https://www.instagram.com/embed.js';
-      script.async = true;
-      script.onload = () => resolve();
-      document.body.appendChild(script);
-    });
-  }
-  return instagramEmbedScriptPromise;
-}
 
 /** Bitta video kartochkasi: `video_url` bo'lsa to'g'ridan-to'g'ri <video>
  * bilan (qo'lda yuklangan/havola qilingan fayl), aks holda `instagram_url`
