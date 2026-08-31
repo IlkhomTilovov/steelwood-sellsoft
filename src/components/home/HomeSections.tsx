@@ -431,12 +431,12 @@ export function InspirationSection({
     <section className="container mx-auto px-4 lg:px-8 mt-16 lg:mt-24 mb-16 lg:mb-24">
       <div className="mb-8">
         <h2 className="font-serif text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
-          {language === 'uz' ? 'Interyer uchun ilhom' : 'Вдохновение для интерьера'}
+          {language === 'uz' ? "Instagram'dan yangiliklar" : 'Новости из Instagram'}
         </h2>
         <p className="mt-3 text-muted-foreground/80">
           {language === 'uz'
-            ? "Instagram'dagi so'nggi videolarimiz."
-            : 'Наши последние видео в Instagram.'}
+            ? 'Yangi ishlarimiz va loyihalarimizni videolarda tomosha qiling.'
+            : 'Смотрите видео наших новых работ и проектов.'}
         </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
