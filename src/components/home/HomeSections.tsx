@@ -389,7 +389,7 @@ function InstagramVideoCard({ video, caption }: { video: InstagramVideoLike; cap
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
           className="absolute border-0"
-          style={{ top: '-54px', left: '-25%', width: '150%', height: '2400px' }}
+          style={{ top: '-82px', left: '-25%', width: '150%', height: '2400px' }}
         />
       </div>
       {caption && (
