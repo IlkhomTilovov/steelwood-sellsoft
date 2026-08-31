@@ -331,7 +331,7 @@ function InstagramVideoCard({ video, caption }: { video: InstagramVideoLike; cap
   if (video.video_url) {
     return (
       <div className="overflow-hidden rounded-[2rem] bg-card shadow-soft hover:shadow-soft-lg transition-shadow duration-500 ease-luxe">
-        <div className="relative aspect-[4/5] bg-black overflow-hidden">
+        <div className="relative aspect-[9/16] bg-black overflow-hidden">
           <video
             ref={videoRef}
             src={video.video_url}
@@ -380,7 +380,7 @@ function InstagramVideoCard({ video, caption }: { video: InstagramVideoLike; cap
 
   return (
     <div className="overflow-hidden rounded-[2rem] bg-card shadow-soft hover:shadow-soft-lg transition-shadow duration-500 ease-luxe">
-      <div className="relative aspect-[4/5] overflow-hidden bg-black">
+      <div className="relative aspect-[9/16] overflow-hidden bg-black">
         <iframe
           src={embedSrc}
           title={caption || 'Instagram video'}
@@ -389,7 +389,7 @@ function InstagramVideoCard({ video, caption }: { video: InstagramVideoLike; cap
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
           className="absolute border-0"
-          style={{ top: '-82px', left: '-25%', width: '150%', height: '2400px' }}
+          style={{ top: '-54px', left: '-5%', width: '110%', height: '2400px' }}
         />
       </div>
       {caption && (
@@ -417,7 +417,7 @@ export function InspirationSection({
       <section className="container mx-auto px-4 lg:px-8 mt-16 lg:mt-24">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="aspect-[4/5] rounded-[2rem] bg-muted/50 animate-pulse" />
+            <div key={i} className="aspect-[9/16] rounded-[2rem] bg-muted/50 animate-pulse" />
           ))}
         </div>
       </section>
