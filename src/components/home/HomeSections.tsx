@@ -300,32 +300,10 @@ interface InstagramVideoLike {
   caption_ru?: string | null;
 }
 
-// Instagram's official embed widget (window.instgrm) turns a
-// `<blockquote class="instagram-media">` into the real Instagram post/reel
-// player. It's the officially supported way to show an Instagram video on
-// another site with no backend involved — no scraping, no link that expires
-// — at the cost of carrying Instagram's own chrome (like/comment count,
-// "View on Instagram", avatar) rather than a fully custom player.
-declare global {
-  interface Window {
-    instgrm?: { Embeds: { process: () => void } };
-  }
-}
+// Instagram post/reel havolasi `/embed/` iframe orqali ko'rsatiladi va
+// profil sarlavhasi hamda like/comment paneli konteynerdan tashqariga
+// chiqarilib kesiladi — natijada faqat videoning o'zi ko'rinadi.
 
-let instagramEmbedScriptPromise: Promise<void> | null = null;
-function loadInstagramEmbedScript(): Promise<void> {
-  if (window.instgrm) return Promise.resolve();
-  if (!instagramEmbedScriptPromise) {
-    instagramEmbedScriptPromise = new Promise((resolve) => {
-      const script = document.createElement('script');
-      script.src = 'https://www.instagram.com/embed.js';
-      script.async = true;
-      script.onload = () => resolve();
-      document.body.appendChild(script);
-    });
-  }
-  return instagramEmbedScriptPromise;
-}
 
 /** Bitta video kartochkasi: `video_url` bo'lsa to'g'ridan-to'g'ri <video>
  * bilan (qo'lda yuklangan/havola qilingan fayl), aks holda `instagram_url`
@@ -347,16 +325,8 @@ function InstagramVideoCard({ video, caption }: { video: InstagramVideoLike; cap
     }
   };
 
-  useEffect(() => {
-    if (video.video_url || !video.instagram_url) return;
-    let cancelled = false;
-    loadInstagramEmbedScript().then(() => {
-      if (!cancelled) window.instgrm?.Embeds.process();
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [video.video_url, video.instagram_url]);
+
+
 
   if (video.video_url) {
     return (
@@ -404,17 +374,33 @@ function InstagramVideoCard({ video, caption }: { video: InstagramVideoLike; cap
 
   if (!video.instagram_url) return null;
 
+  // Faqat videoning o'zi ko'rinsin: Instagram embed'ining tepa (profil) va
+  // past (like/comment) qismlari konteyner tashqarisiga chiqarib kesiladi.
+  const embedSrc = `${video.instagram_url.split('?')[0].replace(/\/$/, '')}/embed/`;
+
   return (
-    <div className="overflow-hidden rounded-[2rem] bg-card shadow-soft hover:shadow-soft-lg transition-shadow duration-500 ease-luxe [&_iframe]:!w-full">
-      <blockquote
-        className="instagram-media"
-        data-instgrm-permalink={video.instagram_url}
-        data-instgrm-version="14"
-        style={{ background: '#FFF', margin: 0, width: '100%' }}
-      />
+    <div className="overflow-hidden rounded-[2rem] bg-card shadow-soft hover:shadow-soft-lg transition-shadow duration-500 ease-luxe">
+      <div className="relative aspect-[4/5] overflow-hidden bg-black">
+        <iframe
+          src={embedSrc}
+          title={caption || 'Instagram video'}
+          scrolling="no"
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          className="absolute left-0 w-full border-0"
+          style={{ top: '-54px', height: '2400px' }}
+        />
+      </div>
+      {caption && (
+        <div className="p-5">
+          <h3 className="font-sans font-semibold text-base text-foreground">{caption}</h3>
+        </div>
+      )}
     </div>
   );
 }
+
 
 /* ============ 3. Ilhom bloki (Instagram videolar) ============ */
 export function InspirationSection({
