@@ -404,17 +404,33 @@ function InstagramVideoCard({ video, caption }: { video: InstagramVideoLike; cap
 
   if (!video.instagram_url) return null;
 
+  // Faqat videoning o'zi ko'rinsin: Instagram embed'ining tepa (profil) va
+  // past (like/comment) qismlari konteyner tashqarisiga chiqarib kesiladi.
+  const embedSrc = `${video.instagram_url.split('?')[0].replace(/\/$/, '')}/embed/`;
+
   return (
-    <div className="overflow-hidden rounded-[2rem] bg-card shadow-soft hover:shadow-soft-lg transition-shadow duration-500 ease-luxe [&_iframe]:!w-full">
-      <blockquote
-        className="instagram-media"
-        data-instgrm-permalink={video.instagram_url}
-        data-instgrm-version="14"
-        style={{ background: '#FFF', margin: 0, width: '100%' }}
-      />
+    <div className="overflow-hidden rounded-[2rem] bg-card shadow-soft hover:shadow-soft-lg transition-shadow duration-500 ease-luxe">
+      <div className="relative aspect-[4/5] overflow-hidden bg-black">
+        <iframe
+          src={embedSrc}
+          title={caption || 'Instagram video'}
+          scrolling="no"
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          className="absolute left-0 w-full border-0"
+          style={{ top: '-54px', height: '2400px' }}
+        />
+      </div>
+      {caption && (
+        <div className="p-5">
+          <h3 className="font-sans font-semibold text-base text-foreground">{caption}</h3>
+        </div>
+      )}
     </div>
   );
 }
+
 
 /* ============ 3. Ilhom bloki (Instagram videolar) ============ */
 export function InspirationSection({
