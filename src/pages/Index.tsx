@@ -14,7 +14,7 @@ import { PromoCarousel } from '@/components/home/PromoCarousel';
 import { useState, useRef, useEffect } from 'react';
 import { getPageSeo } from '@/lib/pageSeo';
 import { PROMO_ICONS } from '@/lib/promoIcons';
-import { CollectionBanners, DiscountBanner, InspirationSection } from '@/components/home/HomeSections';
+import { GlobalBanner, CollectionBanners, DiscountBanner, InspirationSection } from '@/components/home/HomeSections';
 import { LazyImage } from '@/components/LazyImage';
 
 
@@ -413,19 +413,20 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* ============ XALQARO TOVARLAR (Global) BANNERI ============ */}
+      <GlobalBanner language={language} />
+
       {/* ============ HERO (to'plamlar bento) ============ */}
       <HeroBento
         sets={sets as any}
         loading={setsLoading}
         language={language}
-        promoTiles={dbPromoTiles.slice(0, 4)}
       />
 
 
-      {/* ============ PROMO TILES (DB-driven karusel) — Hero'da ko'rsatilgan
-          birinchi 4 tasi bu yerda takrorlanmasligi uchun qolganlari chiqadi ============ */}
+      {/* ============ PROMO TILES (DB-driven karusel) ============ */}
       <div ref={sec1.ref}>
-        <PromoCarousel tiles={dbPromoTiles.slice(4)} language={language} />
+        <PromoCarousel tiles={dbPromoTiles} language={language} />
       </div>
 
 

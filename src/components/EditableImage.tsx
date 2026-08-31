@@ -57,6 +57,9 @@ export function EditableImage({
   const canUseMobileVariant = !!mobileSrc && cleanUrl(currentSrc) === cleanUrl(fallbackSrc);
 
   const handleClick = (e: React.MouseEvent) => {
+    // Editable images can sit inside a Link (e.g. banner/card wrappers) —
+    // selecting the image to edit must not also trigger navigation.
+    e.preventDefault();
     e.stopPropagation();
     selectElement({
       type: 'image',

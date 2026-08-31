@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Truck, RotateCcw, ShieldCheck, Headphones } from 'lucide-react';
 import { LazyImage } from '@/components/LazyImage';
 import { Button } from '@/components/ui/button';
+import { EditableText } from '@/components/EditableText';
 
 type Lang = 'uz' | 'ru';
 
@@ -31,6 +32,40 @@ interface ProductLike {
   price?: number | null;
   original_price?: number | null;
   images?: string[] | null;
+}
+
+/* ============ 0. Xalqaro tovarlar (Global) banneri ============
+   Matn admin tomonidan sayt ustidagi "Tahrirlash" rejimi orqali
+   (EditableText, site_content jadvali) o'zgartiriladi — alohida
+   admin sahifasi shart emas. */
+export function GlobalBanner({ language }: { language: Lang }) {
+  return (
+    <section className="container mx-auto px-4 lg:px-8 pt-6 lg:pt-10">
+      <Link
+        to="/catalog"
+        className="group relative block overflow-hidden rounded-[2rem] min-h-[130px] sm:min-h-[150px] lg:min-h-[180px] flex items-center px-6 sm:px-10 lg:px-16 py-6 shadow-soft hover:shadow-soft-lg transition-shadow duration-500 ease-luxe"
+        style={{
+          backgroundImage:
+            'radial-gradient(100% 140% at 75% 40%, #fa9a72 0%, #f46734 55%, #f46734 100%)',
+        }}
+      >
+        <div className="relative z-10">
+          <EditableText
+            contentKey="home_global_banner_title"
+            fallback={language === 'uz' ? 'Xalqaro tovarlar' : 'Международные товары'}
+            as="h2"
+            className="font-sans text-xl sm:text-3xl lg:text-4xl font-extrabold uppercase tracking-tight text-white leading-tight"
+          />
+          <EditableText
+            contentKey="home_global_banner_subtitle"
+            fallback={language === 'uz' ? 'Uyingiz va siz uchun topilmalar' : 'Находки для вашего дома и вас'}
+            as="p"
+            className="mt-2 block text-xs sm:text-sm lg:text-base text-white/85"
+          />
+        </div>
+      </Link>
+    </section>
+  );
 }
 
 /* ============ 1. Ikki ustunli kolleksiya bannerlari ============ */

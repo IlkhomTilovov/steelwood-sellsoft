@@ -33,7 +33,7 @@ export function EditableText({
   const [isEditing, setIsEditing] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
-  const editRef = useRef<HTMLDivElement>(null);
+  const editRef = useRef<HTMLSpanElement>(null);
 
   const currentValue = getContent(contentKey, language, fallback);
 
@@ -62,8 +62,13 @@ export function EditableText({
     setIsEditing(false);
   }, []);
 
-  const handleClick = useCallback(() => {
+  const handleClick = useCallback((e: React.MouseEvent) => {
     if (isEditMode && canEdit) {
+      // Editable text often sits inside a Link/button (e.g. banner cards) —
+      // clicking to edit must not also trigger navigation or the parent's
+      // own click handler.
+      e.preventDefault();
+      e.stopPropagation();
       setIsEditing(true);
       // Focus the element after render
       setTimeout(() => {
@@ -128,7 +133,7 @@ export function EditableText({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div
+      <span
         ref={editRef}
         contentEditable={isEditing}
         suppressContentEditableWarning
@@ -138,7 +143,7 @@ export function EditableText({
         onClick={handleClick}
         className={cn(
           className,
-          'cursor-pointer transition-all duration-200 outline-none min-w-[20px]',
+          'inline-block cursor-pointer transition-all duration-200 outline-none min-w-[20px]',
           isEditing
             ? 'ring-2 ring-primary ring-offset-2 rounded bg-primary/10 cursor-text'
             : isHovered
@@ -149,7 +154,7 @@ export function EditableText({
         tabIndex={0}
       >
         {currentValue || <span className="text-muted-foreground italic">Matn kiriting...</span>}
-      </div>
+      </span>
 
       {/* Status indicator */}
       <span

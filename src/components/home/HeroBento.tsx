@@ -1,8 +1,6 @@
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, ShoppingCart, Sparkles } from 'lucide-react';
+import { ArrowUpRight, ShoppingCart } from 'lucide-react';
 import { LazyImage } from '@/components/LazyImage';
-import { PROMO_ICONS } from '@/lib/promoIcons';
-import type { PromoTile } from '@/hooks/usePromoTiles';
 
 type Lang = 'uz' | 'ru';
 
@@ -24,33 +22,24 @@ function setHref(set: SetLike) {
 const TINTS = ['bg-secondary', 'bg-muted', 'bg-accent/15'];
 
 /**
- * Bento uslubidagi hero: yuqorida bir necha kichik to'plam kartochkasi,
- * pastda bitta keng, katta to'q kartochka (birinchi to'plam).
+ * Bento uslubidagi hero: chapda bitta keng, katta to'q kartochka (birinchi
+ * to'plam), o'ng tomonda 2x2 to'rda qolgan tayyor to'plam kartochkalari.
  */
 export function HeroBento({
   sets,
   loading,
   language,
-  promoTiles = [],
 }: {
   sets: SetLike[];
   loading: boolean;
   language: Lang;
-  /** Pastki-o'ng panelda 2x2 to'rda ko'rsatiladigan promo kartochkalar (ixtiyoriy). */
-  promoTiles?: PromoTile[];
 }) {
   if (loading) {
     return (
       <section className="container mx-auto px-4 lg:px-8 pt-6 lg:pt-10">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 lg:gap-6 mb-4 lg:mb-6">
-          <div className="aspect-square lg:aspect-auto lg:h-[300px] rounded-[2rem] bg-muted/50 animate-pulse" />
-          <div className="aspect-square lg:aspect-auto lg:h-[300px] rounded-[2rem] bg-muted/50 animate-pulse" />
-          <div className="aspect-square lg:aspect-auto lg:h-[300px] rounded-[2rem] bg-muted/50 animate-pulse" />
-          <div className="aspect-square lg:aspect-auto lg:h-[300px] rounded-[2rem] bg-muted/50 animate-pulse" />
-        </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
-          <div className="h-[300px] lg:h-[420px] rounded-[2rem] bg-muted/50 animate-pulse" />
-          <div className="hidden lg:grid grid-cols-2 grid-rows-2 gap-4 lg:gap-6 h-[420px]">
+          <div className="h-[340px] lg:h-[520px] rounded-[2rem] bg-muted/50 animate-pulse" />
+          <div className="grid grid-cols-2 grid-rows-2 gap-4 lg:gap-6 h-[340px] lg:h-[520px]">
             <div className="rounded-[2rem] bg-muted/50 animate-pulse" />
             <div className="rounded-[2rem] bg-muted/50 animate-pulse" />
             <div className="rounded-[2rem] bg-muted/50 animate-pulse" />
@@ -67,34 +56,13 @@ export function HeroBento({
   const mainTitle = language === 'uz' ? main.title_uz : main.title_ru;
   const mainHref = setHref(main);
   const topSets = rest.slice(0, 4);
-  const heroPromoTiles = promoTiles.slice(0, 4);
 
   return (
     <section className="container mx-auto px-4 lg:px-8 pt-6 lg:pt-10">
-      {/* Yuqori qator — kichik to'plam kartochkalari */}
-      {topSets.length > 0 && (
-        <div
-          className={`grid gap-4 lg:gap-6 mb-4 lg:mb-6 ${
-            topSets.length === 1
-              ? 'grid-cols-1'
-              : topSets.length === 2
-                ? 'grid-cols-2'
-                : topSets.length === 3
-                  ? 'grid-cols-2 sm:grid-cols-3'
-                  : 'grid-cols-2 sm:grid-cols-4'
-          }`}
-        >
-          {topSets.map((s, i) => (
-            <SetTile key={s.id} set={s} language={language} tint={TINTS[i % TINTS.length]} />
-          ))}
-        </div>
-      )}
-
-      {/* Pastki qator — keng to'q kartochka + promo kartochkalar paneli */}
-      <div className={`grid gap-4 lg:gap-6 ${heroPromoTiles.length > 0 ? 'lg:grid-cols-2' : 'grid-cols-1'}`}>
+      <div className={`grid gap-4 lg:gap-6 ${topSets.length > 0 ? 'lg:grid-cols-2' : 'grid-cols-1'}`}>
         <Link
           to={mainHref}
-          className="group relative block overflow-hidden rounded-[2rem] bg-foreground min-h-[300px] lg:min-h-[420px] shadow-soft hover:shadow-soft-lg transition-shadow duration-500 ease-luxe"
+          className="group relative block overflow-hidden rounded-[2rem] bg-foreground min-h-[340px] lg:min-h-[520px] shadow-soft hover:shadow-soft-lg transition-shadow duration-500 ease-luxe"
         >
           {main.image && (
             <LazyImage
@@ -131,44 +99,16 @@ export function HeroBento({
           </div>
         </Link>
 
-        {heroPromoTiles.length > 0 && (
-          <div className="hidden lg:grid grid-cols-2 grid-rows-2 gap-4 lg:gap-6 min-h-[420px]">
-            {heroPromoTiles.map((tile) => (
-              <HeroPromoTile key={tile.id} tile={tile} language={language} />
+        {/* O'ng panel — qolgan tayyor to'plamlar, 2x2 to'r */}
+        {topSets.length > 0 && (
+          <div className="grid grid-cols-2 grid-rows-2 gap-4 lg:gap-6 min-h-[340px] lg:min-h-[520px]">
+            {topSets.map((s, i) => (
+              <SetTile key={s.id} set={s} language={language} tint={TINTS[i % TINTS.length]} />
             ))}
           </div>
         )}
       </div>
     </section>
-  );
-}
-
-function HeroPromoTile({ tile, language }: { tile: PromoTile; language: Lang }) {
-  const Icon = PROMO_ICONS[tile.icon] || Sparkles;
-  const title = language === 'uz' ? tile.title_uz : tile.title_ru;
-  return (
-    <Link
-      to={tile.href || '/catalog'}
-      className={`group relative overflow-hidden rounded-[2rem] shadow-soft hover:shadow-soft-lg transition-all duration-500 ease-luxe ${tile.bg_class}`}
-    >
-      <Icon
-        className={`absolute -bottom-4 -right-3 w-20 h-20 ${tile.text_class} opacity-[0.1] group-hover:scale-110 group-hover:rotate-6 transition-transform duration-700 ease-luxe`}
-        strokeWidth={1}
-      />
-      <div className="relative h-full p-4 lg:p-5 flex flex-col justify-between">
-        <div className="flex items-start justify-between gap-2">
-          <span
-            className={`w-8 h-8 rounded-full border border-current/20 bg-background/25 flex items-center justify-center ${tile.text_class}`}
-          >
-            <Icon className="w-3.5 h-3.5" strokeWidth={1.75} />
-          </span>
-          <ArrowUpRight
-            className={`w-3.5 h-3.5 shrink-0 opacity-60 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 ${tile.text_class}`}
-          />
-        </div>
-        <h3 className={`font-sans font-semibold text-sm leading-snug ${tile.text_class}`}>{title}</h3>
-      </div>
-    </Link>
   );
 }
 
@@ -185,7 +125,7 @@ function SetTile({
   return (
     <Link
       to={setHref(set)}
-      className={`group relative aspect-square lg:aspect-auto lg:h-[300px] overflow-hidden rounded-[2rem] ${tint} shadow-soft hover:shadow-soft-lg transition-all duration-500 ease-luxe`}
+      className={`group relative h-full overflow-hidden rounded-[2rem] ${tint} shadow-soft hover:shadow-soft-lg transition-all duration-500 ease-luxe`}
     >
       {set.image && (
         <LazyImage
