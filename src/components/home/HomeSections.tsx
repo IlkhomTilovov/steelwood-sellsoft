@@ -391,6 +391,9 @@ function InstagramVideoCard({ video, caption }: { video: InstagramVideoLike; cap
           className="absolute border-0"
           style={{ top: '-54px', left: '-5%', width: '110%', height: '2400px' }}
         />
+        {/* Instagram embed'ining pastki paneli (likes / comment / "view more")
+            karta fonidagi qoplama bilan yopiladi — faqat video ko'rinadi. */}
+        <div className="absolute inset-x-0 bottom-0 h-[28%] bg-card pointer-events-auto" />
       </div>
       {caption && (
         <div className="p-5">
