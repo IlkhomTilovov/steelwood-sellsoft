@@ -331,7 +331,7 @@ function InstagramVideoCard({ video, caption }: { video: InstagramVideoLike; cap
   if (video.video_url) {
     return (
       <div className="overflow-hidden rounded-[2rem] bg-card shadow-soft hover:shadow-soft-lg transition-shadow duration-500 ease-luxe">
-        <div className="relative aspect-[4/5] bg-black overflow-hidden">
+        <div className="relative aspect-[9/16] bg-black overflow-hidden">
           <video
             ref={videoRef}
             src={video.video_url}
