@@ -380,7 +380,7 @@ function InstagramVideoCard({ video, caption }: { video: InstagramVideoLike; cap
 
   return (
     <div className="overflow-hidden rounded-[2rem] bg-card shadow-soft hover:shadow-soft-lg transition-shadow duration-500 ease-luxe">
-      <div className="relative aspect-[9/16] overflow-hidden bg-black">
+      <div className="relative aspect-[3/4] overflow-hidden bg-black">
         <iframe
           src={embedSrc}
           title={caption || 'Instagram video'}
@@ -393,7 +393,8 @@ function InstagramVideoCard({ video, caption }: { video: InstagramVideoLike; cap
         />
         {/* Instagram embed'ining pastki paneli (likes / comment / "view more")
             karta fonidagi qoplama bilan yopiladi — faqat video ko'rinadi. */}
-        <div className="absolute inset-x-0 bottom-0 h-[28%] bg-card pointer-events-auto" />
+        <div className="absolute inset-x-0 bottom-0 h-[6%] bg-black pointer-events-none" />
+
       </div>
       {caption && (
         <div className="p-5">
@@ -420,7 +421,7 @@ export function InspirationSection({
       <section className="container mx-auto px-4 lg:px-8 mt-16 lg:mt-24">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="aspect-[9/16] rounded-[2rem] bg-muted/50 animate-pulse" />
+            <div key={i} className="aspect-[3/4] rounded-[2rem] bg-muted/50 animate-pulse" />
           ))}
         </div>
       </section>
