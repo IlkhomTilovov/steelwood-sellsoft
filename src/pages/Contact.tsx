@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useSEO } from '@/hooks/useSEO';
+import { useSystemSettings } from '@/hooks/useSystemSettings';
 import { EditableText } from '@/components/EditableText';
 import { EditableLink } from '@/components/EditableLink';
 import { useSiteContent } from '@/hooks/useSiteContent';
@@ -31,6 +32,8 @@ export default function Contact() {
   const seo = getPageSeo('contact', language);
 
   useSEO({ title: seo.title, description: seo.description, ogTitle: seo.title, ogDescription: seo.description });
+  const { settings } = useSystemSettings();
+  const contactPhone = settings?.contact_phone || '';
   const { toast } = useToast();
   const { getContent } = useSiteContent();
   const [loading, setLoading] = useState(false);
@@ -92,7 +95,7 @@ export default function Contact() {
   };
 
   const contactInfo = [
-    { icon: Phone, labelKey: 'contact_phone_label', valueKey: 'contact_phone_value', label: t.contact.info.phone, value: '', href: '#' },
+    { icon: Phone, labelKey: 'contact_phone_label', valueKey: 'contact_phone_value', label: t.contact.info.phone, value: contactPhone, href: contactPhone ? `tel:${contactPhone.replace(/\s/g, '')}` : undefined },
     { icon: Mail, labelKey: 'contact_email_label', valueKey: 'contact_email_value', label: t.contact.info.email, value: 'info@orsihome.uz', href: 'mailto:info@orsihome.uz' },
     { icon: Clock, labelKey: 'contact_hours_label', valueKey: 'contact_hours_value', label: t.contact.info.workingHours, value: 'Du-Ju: 9:00-18:00, Sha: 10:00-16:00', href: undefined },
   ];
@@ -275,7 +278,7 @@ export default function Contact() {
               <div className="pt-2">
                 <EditableLink
                   contentKey="contact_telegram_link"
-                  fallback="https://t.me/mebelusta"
+                  fallback="https://t.me/steelwood_uz"
                   className="block"
                 >
                   <Button size="lg" variant="outline" className="w-full gap-2 rounded-xl h-14 border-primary/20 hover:bg-primary/10 hover:border-primary/40 hover:text-primary transition-all text-primary">

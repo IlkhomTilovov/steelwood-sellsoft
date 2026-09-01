@@ -51,6 +51,8 @@
     --success-foreground: 0 0% 100%;
     --whatsapp: 142 70% 42%;
     --whatsapp-foreground: 0 0% 100%;
+    --telegram: 199 89% 48%;
+    --telegram-foreground: 0 0% 100%;
 
     /* Premium radius scale: 16 / 24 / 32px */
     --radius: 1rem;
@@ -101,6 +103,8 @@
     --success-foreground: 0 0% 100%;
     --whatsapp: 142 70% 42%;
     --whatsapp-foreground: 0 0% 100%;
+    --telegram: 199 89% 48%;
+    --telegram-foreground: 0 0% 100%;
 
     --shadow-sm: 0 1px 2px hsl(0 0% 0% / 0.2), 0 1px 3px hsl(0 0% 0% / 0.15);
     --shadow-md: 0 4px 12px -4px hsl(0 0% 0% / 0.25), 0 2px 6px -2px hsl(0 0% 0% / 0.2);

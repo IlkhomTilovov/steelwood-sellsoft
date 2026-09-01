@@ -1,4 +1,4 @@
-import { Award, Users, Package, MapPin } from 'lucide-react';
+import { Award, Users, Package, MapPin, MessageCircle, PenTool, Hammer, Truck } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useSEO } from '@/hooks/useSEO';
 import { EditableText } from '@/components/EditableText';
@@ -16,12 +16,6 @@ export default function About() {
     { icon: Package, value: '5000+', label: t.about.stats.products, valueKey: 'about_stat_products_value', labelKey: 'about_stat_products_label' },
     { icon: Users, value: '3000+', label: t.about.stats.customers, valueKey: 'about_stat_customers_value', labelKey: 'about_stat_customers_label' },
     { icon: MapPin, value: '12+', label: t.about.stats.cities, valueKey: 'about_stat_cities_value', labelKey: 'about_stat_cities_label' },
-  ];
-
-  const team = [
-    { name: 'Akbar Rahimov', role: language === 'uz' ? 'Asoschisi va direktor' : 'Основатель и директор', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300', nameKey: 'about_team_1_name', roleKey: 'about_team_1_role', imageKey: 'about_team_1_image' },
-    { name: 'Sardor Karimov', role: language === 'uz' ? 'Bosh dizayner' : 'Главный дизайнер', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300', nameKey: 'about_team_2_name', roleKey: 'about_team_2_role', imageKey: 'about_team_2_image' },
-    { name: 'Nilufar Azimova', role: language === 'uz' ? "Sotish bo'limi boshlig'i" : 'Руководитель отдела продаж', image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300', nameKey: 'about_team_3_name', roleKey: 'about_team_3_role', imageKey: 'about_team_3_image' },
   ];
 
   return (
@@ -53,9 +47,9 @@ export default function About() {
           <p className="text-primary-foreground/80 text-lg max-w-2xl mx-auto">
             <EditableText 
               contentKey="about_subtitle" 
-              fallback={language === 'uz' 
-                ? "10 yildan ortiq tajriba bilan Toshkentning eng yaxshi mebel ishlab chiqaruvchilaridan biri"
-                : "Один из лучших производителей мебели в Ташкенте с более чем 10-летним опытом"
+              fallback={language === 'uz'
+                ? "Metall karkasli loft mebellarni o'z seximizda ishlab chiqaramiz — mustahkam, minimalist va uzoq xizmat qiladigan yechimlar"
+                : "Производим лофт-мебель на металлическом каркасе в собственном цехе — прочные, минималистичные и долговечные решения"
               }
               as="span"
               className="text-lg"
@@ -128,8 +122,8 @@ export default function About() {
                 <EditableText 
                   contentKey="about_story_text_2" 
                   fallback={language === 'uz'
-                    ? "Biz kichik ustaxonadan boshlab, bugungi kunda zamonaviy ishlab chiqarish liniyalariga ega katta korxonaga aylandik. Har bir mahsulotimizda sifat va ehtiyotkorlik aks etadi."
-                    : "Мы начинали с небольшой мастерской и сегодня превратились в крупное предприятие с современными производственными линиями. В каждом нашем изделии отражается качество и забота."
+                    ? "Metall karkas payvandlash va yig'ish jarayonini to'liq o'zimiz, o'z seximizda nazorat qilamiz. Seriyali modellar bilan bir qatorda, o'lchov bo'yicha individual buyurtmalarni ham bajaramiz."
+                    : "Процесс сварки металлического каркаса и сборки полностью контролируем сами, в собственном цехе. Наряду с серийными моделями выполняем индивидуальные заказы по размерам."
                   }
                   as="span"
                   multiline
@@ -220,14 +214,14 @@ export default function About() {
           </h2>
           <div className="grid md:grid-cols-4 gap-6">
             {[
-              { step: '01', titleKey: 'about_process_1_title', descKey: 'about_process_1_desc', title: language === 'uz' ? 'Konsultatsiya' : 'Консультация', desc: language === 'uz' ? "Sizning talablaringizni o'rganamiz" : 'Изучаем ваши требования' },
-              { step: '02', titleKey: 'about_process_2_title', descKey: 'about_process_2_desc', title: language === 'uz' ? 'Dizayn' : 'Дизайн', desc: language === 'uz' ? '3D loyiha tayyorlaymiz' : 'Готовим 3D проект' },
-              { step: '03', titleKey: 'about_process_3_title', descKey: 'about_process_3_desc', title: language === 'uz' ? 'Ishlab chiqarish' : 'Производство', desc: language === 'uz' ? 'Sifatli materiallardan yasaymiz' : 'Изготавливаем из качественных материалов' },
-              { step: '04', titleKey: 'about_process_4_title', descKey: 'about_process_4_desc', title: language === 'uz' ? 'Yetkazib berish' : 'Доставка', desc: language === 'uz' ? "O'rnatib beramiz" : 'Доставляем и устанавливаем' },
+              { Icon: MessageCircle, titleKey: 'about_process_1_title', descKey: 'about_process_1_desc', title: language === 'uz' ? 'Konsultatsiya' : 'Консультация', desc: language === 'uz' ? "Sizning talablaringizni o'rganamiz" : 'Изучаем ваши требования' },
+              { Icon: PenTool, titleKey: 'about_process_2_title', descKey: 'about_process_2_desc', title: language === 'uz' ? 'Dizayn' : 'Дизайн', desc: language === 'uz' ? '3D loyiha tayyorlaymiz' : 'Готовим 3D проект' },
+              { Icon: Hammer, titleKey: 'about_process_3_title', descKey: 'about_process_3_desc', title: language === 'uz' ? 'Ishlab chiqarish' : 'Производство', desc: language === 'uz' ? 'Sifatli materiallardan yasaymiz' : 'Изготавливаем из качественных материалов' },
+              { Icon: Truck, titleKey: 'about_process_4_title', descKey: 'about_process_4_desc', title: language === 'uz' ? 'Yetkazib berish' : 'Доставка', desc: language === 'uz' ? "O'rnatib beramiz" : 'Доставляем и устанавливаем' },
             ].map((item, i) => (
               <div key={i} className="text-center p-6">
-                <div className="w-16 h-16 mx-auto mb-4 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-serif text-2xl font-bold">
-                  {item.step}
+                <div className="w-16 h-16 mx-auto mb-4 bg-primary text-primary-foreground rounded-full flex items-center justify-center">
+                  <item.Icon className="w-7 h-7" strokeWidth={1.6} />
                 </div>
                 <h4 className="font-medium mb-2">
                   <EditableText 

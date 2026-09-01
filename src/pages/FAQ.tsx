@@ -2,11 +2,17 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { faqs } from '@/lib/data';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useSEO } from '@/hooks/useSEO';
+import { useSystemSettings } from '@/hooks/useSystemSettings';
 import { EditableText } from '@/components/EditableText';
 import { getPageSeo } from '@/lib/pageSeo';
 
 export default function FAQ() {
   const { language, t } = useLanguage();
+  const { settings } = useSystemSettings();
+  const telegramTarget = settings?.social_telegram || '';
+  const telegramHref = telegramTarget
+    ? (telegramTarget.startsWith('http') ? telegramTarget : `https://t.me/${telegramTarget.replace('@', '')}`)
+    : undefined;
   const seo = getPageSeo('faq', language);
 
   useSEO({ title: seo.title, description: seo.description, ogTitle: seo.title, ogDescription: seo.description });
@@ -108,20 +114,22 @@ export default function FAQ() {
               field="cta_text"
             />
           </p>
-          <a
-            href="https://wa.me/998901234567"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-whatsapp hover:bg-whatsapp/90 text-whatsapp-foreground px-6 py-3 rounded-full font-medium transition-colors"
-          >
-            <EditableText 
-              contentKey="faq_cta_button" 
-              fallback="WhatsApp orqali yozing"
-              as="span"
-              section="faq"
-              field="cta_button"
-            />
-          </a>
+          {telegramHref && (
+            <a
+              href={telegramHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-telegram hover:bg-telegram/90 text-telegram-foreground px-6 py-3 rounded-full font-medium transition-colors"
+            >
+              <EditableText
+                contentKey="faq_cta_button"
+                fallback={language === 'uz' ? "Telegram orqali yozing" : "Написать в Telegram"}
+                as="span"
+                section="faq"
+                field="cta_button"
+              />
+            </a>
+          )}
         </div>
       </div>
     </div>

@@ -20,7 +20,6 @@ interface SystemSettingsData {
   logo_url: string | null;
   favicon_url: string | null;
   contact_phone: string | null;
-  whatsapp_number: string | null;
   working_hours_uz: string | null;
   working_hours_ru: string | null;
   address_uz: string | null;
@@ -42,7 +41,6 @@ const defaultSettings: Omit<SystemSettingsData, 'id'> = {
   logo_url: null,
   favicon_url: null,
   contact_phone: '',
-  whatsapp_number: '',
   working_hours_uz: '',
   working_hours_ru: '',
   address_uz: '',
@@ -97,7 +95,6 @@ export default function SystemSettings() {
           logo_url: settingsData.logo_url,
           favicon_url: settingsData.favicon_url || null,
           contact_phone: settingsData.contact_phone || '',
-          whatsapp_number: settingsData.whatsapp_number || '',
           working_hours_uz: settingsData.working_hours_uz || '',
           working_hours_ru: settingsData.working_hours_ru || '',
           address_uz: settingsData.address_uz || '',
@@ -478,23 +475,13 @@ export default function SystemSettings() {
               <CardDescription>{t.contactDesc}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>{t.phone}</Label>
-                  <Input
-                    value={formData.contact_phone || ''}
-                    onChange={(e) => setFormData({ ...formData, contact_phone: e.target.value })}
-                    placeholder="+998 90 123 45 67"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>{t.whatsapp}</Label>
-                  <Input
-                    value={formData.whatsapp_number || ''}
-                    onChange={(e) => setFormData({ ...formData, whatsapp_number: e.target.value })}
-                    placeholder="+998901234567"
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label>{t.phone}</Label>
+                <Input
+                  value={formData.contact_phone || ''}
+                  onChange={(e) => setFormData({ ...formData, contact_phone: e.target.value })}
+                  placeholder="+998 90 123 45 67"
+                />
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
