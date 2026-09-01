@@ -34,7 +34,7 @@ export default function About() {
                 wrapperClassName="w-full h-full relative"
                 section="about"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/85 to-primary/10" />
+              <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/85 to-primary/10 pointer-events-none" />
             </div>
 
             <div className="relative z-10 max-w-2xl px-8 sm:px-12 lg:px-16 py-7">
