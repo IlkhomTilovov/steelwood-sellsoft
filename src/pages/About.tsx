@@ -24,7 +24,7 @@ export default function About() {
       {/* Hero — single banner: photo bleeding in behind a dark gradient, text on top */}
       <section id="hero" className="pt-16 lg:pt-24">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="relative overflow-hidden rounded-[2rem] shadow-soft-lg min-h-[440px] lg:min-h-[560px] flex items-center">
+          <div className="relative overflow-hidden rounded-[2rem] shadow-soft-lg min-h-[340px] lg:min-h-[420px] flex items-center">
             <div className="absolute inset-0">
               <EditableImage
                 contentKey="about_hero_image"
@@ -37,7 +37,7 @@ export default function About() {
               <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/85 to-primary/10" />
             </div>
 
-            <div className="relative z-10 max-w-xl px-8 sm:px-12 lg:px-16 py-16">
+            <div className="relative z-10 max-w-xl px-8 sm:px-12 lg:px-16 py-12">
               <span className="block text-xs uppercase tracking-[0.2em] text-primary-foreground/70 font-medium mb-5">
                 <EditableText
                   contentKey="about_title"
