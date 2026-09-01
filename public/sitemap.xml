@@ -26,32 +26,50 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://steelwood.uz/catalog?category=mebel-uchun-moyna-materiallari</loc>
-    <lastmod>2026-03-09T11:32:09+00:00</lastmod>
+    <loc>https://steelwood.uz/catalog?category=stellajlar</loc>
+    <lastmod>2026-08-28T11:50:49.801361+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://steelwood.uz/catalog?category=avtomobil-orindiqlari-uchun-materiallar</loc>
-    <lastmod>2026-03-09T22:01:18+00:00</lastmod>
+    <loc>https://steelwood.uz/catalog?category=stollar</loc>
+    <lastmod>2026-08-28T11:50:55.135212+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://steelwood.uz/product/avtomobil-orindiqlari-uchun-premium-koja-qoplama-materiali</loc>
-    <lastmod>2026-03-09T22:10:10+00:00</lastmod>
+    <loc>https://steelwood.uz/catalog?category=shkaflar</loc>
+    <lastmod>2026-08-28T11:52:52.533753+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://steelwood.uz/catalog?category=krovatlar</loc>
+    <lastmod>2026-08-28T12:22:06.423013+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://steelwood.uz/catalog?category=jurnal-stolchalari</loc>
+    <lastmod>2026-08-28T12:26:51.681523+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://steelwood.uz/product/finix</loc>
+    <lastmod>2026-08-30T12:23:44.167425+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://steelwood.uz/product/premium-mebel-qoplama-matosi</loc>
-    <lastmod>2026-03-09T21:27:14+00:00</lastmod>
+    <loc>https://steelwood.uz/product/baraka</loc>
+    <lastmod>2026-08-30T12:23:51.278236+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://steelwood.uz/product/mebel-uchun-premium-moyna-materiali</loc>
-    <lastmod>2026-03-09T21:56:28+00:00</lastmod>
+    <loc>https://steelwood.uz/product/manhattan</loc>
+    <lastmod>2026-08-31T11:37:19.038166+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>

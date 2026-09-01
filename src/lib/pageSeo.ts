@@ -39,12 +39,12 @@ const SEO: Record<PageKey, Record<Lang, PageSeo>> = {
     uz: {
       title: 'Biz haqimizda — SteelWood',
       description:
-        "SteelWood haqida: 10+ yillik tajriba, 5000+ mahsulot va 3000+ mamnun mijoz. Bizning qadriyatlarimiz, jamoamiz va O'zbekistondagi filiallarimiz.",
+        "SteelWood — metall karkasli loft mebellar ishlab chiqaruvchi o'z sexi. Seriyali modellar va o'lchov bo'yicha individual buyurtmalar. Qadriyatlarimiz va ishlab chiqarish jarayoni haqida.",
     },
     ru: {
       title: 'О нас — SteelWood',
       description:
-        'О компании SteelWood: 10+ лет опыта, 5000+ товаров и 3000+ довольных клиентов. Наши ценности, команда и филиалы по Узбекистану.',
+        'SteelWood — собственный цех по производству лофт-мебели на металлическом каркасе. Серийные модели и изготовление на заказ по индивидуальным размерам.',
     },
   },
   contact: {
