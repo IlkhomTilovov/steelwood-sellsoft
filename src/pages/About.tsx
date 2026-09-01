@@ -1,4 +1,5 @@
-import { Award, Users, Package, MapPin, MessageCircle, PenTool, Hammer, Truck } from 'lucide-react';
+import { MessageCircle, PenTool, Hammer, Truck, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useSEO } from '@/hooks/useSEO';
 import { EditableText } from '@/components/EditableText';
@@ -12,77 +13,83 @@ export default function About() {
   useSEO({ title: seo.title, description: seo.description, ogTitle: seo.title, ogDescription: seo.description });
 
   const stats = [
-    { icon: Award, value: '10+', label: t.about.stats.years, valueKey: 'about_stat_years_value', labelKey: 'about_stat_years_label' },
-    { icon: Package, value: '5000+', label: t.about.stats.products, valueKey: 'about_stat_products_value', labelKey: 'about_stat_products_label' },
-    { icon: Users, value: '3000+', label: t.about.stats.customers, valueKey: 'about_stat_customers_value', labelKey: 'about_stat_customers_label' },
-    { icon: MapPin, value: '12+', label: t.about.stats.cities, valueKey: 'about_stat_cities_value', labelKey: 'about_stat_cities_label' },
+    { value: '10+', label: t.about.stats.years, valueKey: 'about_stat_years_value', labelKey: 'about_stat_years_label' },
+    { value: '5000+', label: t.about.stats.products, valueKey: 'about_stat_products_value', labelKey: 'about_stat_products_label' },
+    { value: '3000+', label: t.about.stats.customers, valueKey: 'about_stat_customers_value', labelKey: 'about_stat_customers_label' },
+    { value: '12+', label: t.about.stats.cities, valueKey: 'about_stat_cities_value', labelKey: 'about_stat_cities_label' },
   ];
 
   return (
     <div className="min-h-screen">
-      {/* Hero */}
-      <section id="hero" className="relative h-[50vh] min-h-[400px] flex items-center">
-        <div className="absolute inset-0 z-0">
-          <EditableImage
-            contentKey="about_hero_image"
-            fallbackSrc="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920"
-            alt="Workshop"
-            className="w-full h-full object-cover"
-            wrapperClassName="w-full h-full relative z-10"
-            section="about"
-          />
-          <div className="absolute inset-0 bg-black/60 pointer-events-none z-20" />
-        </div>
-        <div className="container mx-auto px-4 relative z-30 text-center">
-          <h1 className="font-serif text-4xl md:text-5xl font-bold text-primary-foreground mb-4">
-            <EditableText 
-              contentKey="about_title" 
-              fallback={t.about.title}
-              as="span"
-              className="font-serif text-4xl md:text-5xl font-bold"
-              section="about"
-              field="title"
-            />
-          </h1>
-          <p className="text-primary-foreground/80 text-lg max-w-2xl mx-auto">
-            <EditableText 
-              contentKey="about_subtitle" 
-              fallback={language === 'uz'
-                ? "Metall karkasli loft mebellarni o'z seximizda ishlab chiqaramiz — mustahkam, minimalist va uzoq xizmat qiladigan yechimlar"
-                : "Производим лофт-мебель на металлическом каркасе в собственном цехе — прочные, минималистичные и долговечные решения"
-              }
-              as="span"
-              className="text-lg"
-              section="about"
-              field="subtitle"
-            />
-          </p>
-        </div>
-      </section>
+      {/* Hero — asymmetric, typography-led */}
+      <section id="hero" className="pt-16 lg:pt-24">
+        <div className="container mx-auto px-4 lg:px-8">
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+            <div className="lg:col-span-6">
+              <span className="block text-xs uppercase tracking-[0.2em] text-muted-foreground font-medium mb-5">
+                <EditableText
+                  contentKey="about_title"
+                  fallback={t.about.title}
+                  as="span"
+                  section="about"
+                  field="title"
+                />
+              </span>
+              <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.1] tracking-tight text-foreground">
+                <EditableText
+                  contentKey="about_subtitle"
+                  fallback={language === 'uz'
+                    ? "Metall karkasli loft mebellarni o'z seximizda ishlab chiqaramiz — mustahkam, minimalist va uzoq xizmat qiladigan yechimlar"
+                    : "Производим лофт-мебель на металлическом каркасе в собственном цехе — прочные, минималистичные и долговечные решения"
+                  }
+                  as="span"
+                  multiline
+                  section="about"
+                  field="subtitle"
+                />
+              </h1>
+              <Link
+                to="/contact"
+                className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-foreground border-b border-foreground/30 pb-1 hover:border-foreground transition-colors"
+              >
+                {language === 'uz' ? "Biz bilan bog'laning" : 'Связаться с нами'}
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+            <div className="lg:col-span-6">
+              <div className="rounded-[2rem] overflow-hidden shadow-soft-lg aspect-[4/5] lg:aspect-[3/4]">
+                <EditableImage
+                  contentKey="about_hero_image"
+                  fallbackSrc="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920"
+                  alt="Workshop"
+                  className="w-full h-full object-cover"
+                  wrapperClassName="w-full h-full"
+                  section="about"
+                />
+              </div>
+            </div>
+          </div>
 
-      {/* Stats */}
-      <section className="py-12 bg-muted/50">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {/* Stats — hairline row, scale does the work instead of icon cards */}
+          <div className="mt-16 lg:mt-24 pt-8 border-t border-border grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-8">
             {stats.map((stat, i) => (
-              <div key={i} className="text-center p-6 bg-card rounded-2xl shadow-warm">
-                <stat.icon className="w-10 h-10 mx-auto mb-3 text-primary" />
-                <div className="font-serif text-3xl font-bold text-foreground">
-                  <EditableText 
-                    contentKey={stat.valueKey} 
+              <div key={i}>
+                <div className="font-serif text-4xl lg:text-5xl font-semibold text-foreground tracking-tight">
+                  <EditableText
+                    contentKey={stat.valueKey}
                     fallback={stat.value}
                     as="span"
-                    className="font-serif text-3xl font-bold"
+                    className="font-serif text-4xl lg:text-5xl font-semibold"
                     section="about"
                     field={stat.valueKey}
                   />
                 </div>
-                <div className="text-sm text-muted-foreground">
-                  <EditableText 
-                    contentKey={stat.labelKey} 
+                <div className="mt-2 text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                  <EditableText
+                    contentKey={stat.labelKey}
                     fallback={stat.label}
                     as="span"
-                    className="text-sm"
+                    className="text-xs uppercase tracking-[0.14em]"
                     section="about"
                     field={stat.labelKey}
                   />
