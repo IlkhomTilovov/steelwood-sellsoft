@@ -21,12 +21,24 @@ export default function About() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero — asymmetric, typography-led */}
+      {/* Hero — single banner: photo bleeding in behind a dark gradient, text on top */}
       <section id="hero" className="pt-16 lg:pt-24">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-            <div className="lg:col-span-6">
-              <span className="block text-xs uppercase tracking-[0.2em] text-muted-foreground font-medium mb-5">
+          <div className="relative overflow-hidden rounded-[2rem] shadow-soft-lg min-h-[440px] lg:min-h-[560px] flex items-center">
+            <div className="absolute inset-0">
+              <EditableImage
+                contentKey="about_hero_image"
+                fallbackSrc="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920"
+                alt="Workshop"
+                className="w-full h-full object-cover"
+                wrapperClassName="w-full h-full relative"
+                section="about"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/85 to-primary/10" />
+            </div>
+
+            <div className="relative z-10 max-w-xl px-8 sm:px-12 lg:px-16 py-16">
+              <span className="block text-xs uppercase tracking-[0.2em] text-primary-foreground/70 font-medium mb-5">
                 <EditableText
                   contentKey="about_title"
                   fallback={t.about.title}
@@ -35,7 +47,7 @@ export default function About() {
                   field="title"
                 />
               </span>
-              <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.1] tracking-tight text-foreground">
+              <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.1] tracking-tight text-primary-foreground">
                 <EditableText
                   contentKey="about_subtitle"
                   fallback={language === 'uz'
@@ -50,23 +62,11 @@ export default function About() {
               </h1>
               <Link
                 to="/contact"
-                className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-foreground border-b border-foreground/30 pb-1 hover:border-foreground transition-colors"
+                className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-primary-foreground border-b border-primary-foreground/40 pb-1 hover:border-primary-foreground transition-colors"
               >
                 {language === 'uz' ? "Biz bilan bog'laning" : 'Связаться с нами'}
                 <ArrowRight className="w-4 h-4" />
               </Link>
-            </div>
-            <div className="lg:col-span-6">
-              <div className="rounded-[2rem] overflow-hidden shadow-soft-lg aspect-[4/5] lg:aspect-[3/4]">
-                <EditableImage
-                  contentKey="about_hero_image"
-                  fallbackSrc="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920"
-                  alt="Workshop"
-                  className="w-full h-full object-cover"
-                  wrapperClassName="w-full h-full"
-                  section="about"
-                />
-              </div>
             </div>
           </div>
 
