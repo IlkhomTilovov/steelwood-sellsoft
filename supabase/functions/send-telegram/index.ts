@@ -69,7 +69,7 @@ function normalizeShortName(value?: string) {
   const v = (value || '').trim();
   if (!v) return '';
 
-  // Full Direct Link like t.me/orsihomebot/katalog or https://t.me/orsihomebot/katalog
+  // Full Direct Link like t.me/mybot/katalog or https://t.me/mybot/katalog
   const fullMatch = v.match(/^https?:\/\/t\.me\/([A-Za-z0-9_]+)\/([A-Za-z0-9_]+)\/?$/i)
                  || v.match(/^t\.me\/([A-Za-z0-9_]+)\/([A-Za-z0-9_]+)\/?$/i);
   if (fullMatch) {
@@ -236,7 +236,7 @@ Deno.serve(async (req) => {
       const shortNameOrUrl = normalizeShortName(body.webapp_short_name || settings.webapp_short_name);
       if (!shortNameOrUrl) {
         return new Response(
-          JSON.stringify({ success: false, error: 'Direct Link short name topilmadi. BotFather → /myapps orqali Mini App short name yarating va sozlamaga kiriting (yoki to\'liq link: t.me/orsihomebot/katalog).' }),
+          JSON.stringify({ success: false, error: 'Direct Link short name topilmadi. BotFather → /myapps orqali Mini App short name yarating va sozlamaga kiriting (yoki to\'liq link: t.me/mybot/katalog).' }),
           { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }

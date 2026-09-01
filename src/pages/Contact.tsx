@@ -96,7 +96,7 @@ export default function Contact() {
 
   const contactInfo = [
     { icon: Phone, labelKey: 'contact_phone_label', valueKey: 'contact_phone_value', label: t.contact.info.phone, value: contactPhone, href: contactPhone ? `tel:${contactPhone.replace(/\s/g, '')}` : undefined },
-    { icon: Mail, labelKey: 'contact_email_label', valueKey: 'contact_email_value', label: t.contact.info.email, value: 'info@orsihome.uz', href: 'mailto:info@orsihome.uz' },
+    { icon: Mail, labelKey: 'contact_email_label', valueKey: 'contact_email_value', label: t.contact.info.email, value: 'info@steelwood.uz', href: 'mailto:info@steelwood.uz' },
     { icon: Clock, labelKey: 'contact_hours_label', valueKey: 'contact_hours_value', label: t.contact.info.workingHours, value: 'Du-Ju: 9:00-18:00, Sha: 10:00-16:00', href: undefined },
   ];
 

@@ -1,6 +1,6 @@
-# OrisHome Premium Transformatsiya — To'liq Roadmap
+# SteelWood Premium Transformatsiya — To'liq Roadmap
 
-Loyiha nomi: **Mirmexa → OrisHome** (rebrand)
+Loyiha nomi: **Mirmexa → OrisHome → SteelWood** (rebrand tarixi)
 Asos: hozirgi React + Vite + TS + Tailwind + Supabase stack saqlanadi, qaytadan qurilmaydi.
 Falsafa: *"interior emotion sotish"* — Apple minimalism + Zara Home + West Elm.
 
@@ -9,7 +9,7 @@ Falsafa: *"interior emotion sotish"* — Apple minimalism + Zara Home + West Elm
 ## SPRINT 1 — Brand & Design System (poydevor)
 **Maqsad:** Butun saytning vizual DNK'sini o'rnatish.
 
-- OrisHome logo (yangi yaratish yoki yuklash)
+- SteelWood logo (yangi yaratish yoki yuklash)
 - Yangi rang palitrasi `index.css` da semantic tokenlar sifatida:
   - Primary `#1F3A2E` (deep green)
   - Secondary `#D6C2A8` (warm sand)
@@ -17,7 +17,7 @@ Falsafa: *"interior emotion sotish"* — Apple minimalism + Zara Home + West Elm
   - Foreground `#222222`
 - Tipografiya: **Cormorant Garamond** (headings) + **Inter** (body)
 - Tailwind config: yangi shadowlar (soft, premium), border-radius scale (16/24/32px)
-- Supabase `themes` jadvaliga "OrisHome Premium" temasini qo'shish va active qilish
+- Supabase `themes` jadvaliga "SteelWood Premium" temasini qo'shish va active qilish
 - Dark mode varianti
 
 ## SPRINT 2 — Header & Navigation
