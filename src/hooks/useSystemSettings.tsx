@@ -7,7 +7,6 @@ export interface SystemSettings {
   logo_url: string | null;
   favicon_url: string | null;
   contact_phone: string | null;
-  whatsapp_number: string | null;
   working_hours_uz: string | null;
   working_hours_ru: string | null;
   address_uz: string | null;
@@ -47,7 +46,6 @@ const defaultSettings: SystemSettings = {
   logo_url: null,
   favicon_url: null,
   contact_phone: '',
-  whatsapp_number: '',
   working_hours_uz: '',
   working_hours_ru: '',
   address_uz: '',

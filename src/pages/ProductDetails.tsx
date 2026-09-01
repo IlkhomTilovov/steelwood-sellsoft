@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Star, ShoppingBag, MessageCircle, Phone, Check, Loader2, Play } from 'lucide-react';
+import { ArrowLeft, Star, ShoppingBag, MessageCircle, Check, Loader2, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import { ProductCard } from '@/components/ProductCard';
@@ -12,6 +12,8 @@ import { useSEO } from '@/hooks/useSEO';
 import { useCart } from '@/hooks/useCart';
 import { useProductById, useProducts, useCategories, Product } from '@/hooks/useProducts';
 import { useAuth } from '@/hooks/useAuth';
+import { useSystemSettings } from '@/hooks/useSystemSettings';
+import { FeatureStrip } from '@/components/home/HomeSections';
 import { getAttributeIcon } from '@/lib/attributeIcons';
 
 interface MediaItem {
@@ -27,6 +29,7 @@ export default function ProductDetails() {
   const { language, t } = useLanguage();
   const { addItem, isInCart } = useCart();
   const { isAdmin } = useAuth();
+  const { settings } = useSystemSettings();
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
@@ -207,9 +210,15 @@ export default function ProductDetails() {
     ? (language === 'uz' ? category.name_uz : category.name_ru)
     : (product.category_id || '—');
 
-  const whatsappMessage = encodeURIComponent(
+  const telegramMessage = encodeURIComponent(
     `Assalomu alaykum! Men "${name}" mahsulotiga qiziqyapman.\n\nNarxi: ${formatPrice(price)} so'm\n\nBatafsil ma'lumot berishingizni so'rayman.`
   );
+  const telegramTarget = settings?.social_telegram || '';
+  const telegramHref = telegramTarget
+    ? (telegramTarget.startsWith('http')
+        ? `${telegramTarget}?text=${telegramMessage}`
+        : `https://t.me/${telegramTarget.replace('@', '')}?text=${telegramMessage}`)
+    : undefined;
 
   return (
     <div id="hero" className="min-h-screen py-8">
@@ -404,11 +413,16 @@ export default function ProductDetails() {
               </Button>
             </div>
 
-            <Button asChild variant="ghost" className="w-full gap-2 mb-4">
-              <a href="tel:+998901234567">
-                <Phone className="w-4 h-4" /> {t.products.requestConsultation}
-              </a>
-            </Button>
+            {telegramHref && (
+              <Button asChild variant="ghost" className="w-full gap-2 mb-4">
+                <a href={telegramHref} target="_blank" rel="noopener noreferrer">
+                  <MessageCircle className="w-4 h-4" /> {t.products.requestConsultation}
+                </a>
+              </Button>
+            )}
+
+            {/* Yetkazish / tayyorlash muddati / kafolat / mavjudlik */}
+            <FeatureStrip language={language} compact />
 
             {/* Materials */}
             {materials.length > 0 && (

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Truck, RotateCcw, ShieldCheck, Headphones, Play, Instagram } from 'lucide-react';
+import { ArrowRight, Truck, Timer, ShieldCheck, PackageCheck, MapPin, Play, Instagram } from 'lucide-react';
 import { LazyImage } from '@/components/LazyImage';
 import { Button } from '@/components/ui/button';
 import { EditableText } from '@/components/EditableText';
@@ -456,46 +456,90 @@ export function InspirationSection({
   );
 }
 
-/* ============ 4. Afzalliklar qatori ============ */
-export function FeatureStrip({ language }: { language: Lang }) {
-  const items = [
-    {
-      Icon: Truck,
-      title: language === 'uz' ? 'Bepul yetkazib berish' : 'Бесплатная доставка',
-      text: language === 'uz' ? 'Toshkent bo‘ylab' : 'По Ташкенту',
-    },
-    {
-      Icon: RotateCcw,
-      title: language === 'uz' ? 'Qulay qaytarish' : 'Удобный возврат',
-      text: language === 'uz' ? '14 kun ichida' : 'В течение 14 дней',
-    },
-    {
-      Icon: ShieldCheck,
-      title: language === 'uz' ? 'Kafolat' : 'Гарантия',
-      text: language === 'uz' ? '24 oygacha kafolat' : 'До 24 месяцев',
-    },
-    {
-      Icon: Headphones,
-      title: language === 'uz' ? 'Qo‘llab-quvvatlash' : 'Поддержка',
-      text: language === 'uz' ? 'Har kuni 9:00–20:00' : 'Ежедневно 9:00–20:00',
-    },
-  ];
+/* ============ 4. Afzalliklar qatori — yetkazish/muddat/kafolat/mavjudlik ============ */
+export const TRUST_INFO_ITEMS = [
+  {
+    key: 'delivery',
+    Icon: Truck,
+    titleUz: 'Yetkazib berish',
+    titleRu: 'Доставка',
+    textUz: "Toshkent va viloyatlarga yetkazamiz — narxi manzilga qarab hisoblanadi",
+    textRu: 'Доставляем по Ташкенту и регионам — стоимость зависит от адреса',
+  },
+  {
+    key: 'leadtime',
+    Icon: Timer,
+    titleUz: 'Tayyorlash muddati',
+    titleRu: 'Срок изготовления',
+    textUz: 'Modelga qarab farqlanadi — buyurtma paytida aniq aytamiz',
+    textRu: 'Зависит от модели — уточним при оформлении заказа',
+  },
+  {
+    key: 'warranty',
+    Icon: ShieldCheck,
+    titleUz: 'Kafolat',
+    titleRu: 'Гарантия',
+    textUz: 'Barcha mahsulotlarga kafolat beriladi',
+    textRu: 'На всю продукцию предоставляется гарантия',
+  },
+  {
+    key: 'availability',
+    Icon: PackageCheck,
+    titleUz: 'Mavjudlik',
+    titleRu: 'Наличие',
+    textUz: "Ba'zi mahsulotlar tayyor va tez jo'natiladi, boshqalari buyurtma asosida tayyorlanadi",
+    textRu: 'Часть товаров в наличии и отправляется быстро, остальные изготавливаются на заказ',
+  },
+] as const;
 
+export function FeatureStrip({ language, compact = false }: { language: Lang; compact?: boolean }) {
   return (
-    <section className="container mx-auto px-4 lg:px-8 mt-16 lg:mt-24 pb-16 lg:pb-24">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 border-t border-border pt-10">
-        {items.map(({ Icon, title, text }) => (
-          <div key={title} className="flex items-start gap-3">
+    <section className={compact ? 'mt-8' : 'container mx-auto px-4 lg:px-8 mt-16 lg:mt-24 pb-16 lg:pb-24'}>
+      <div className={`grid grid-cols-2 ${compact ? 'gap-4' : 'lg:grid-cols-4 gap-4 lg:gap-6 border-t border-border pt-10'}`}>
+        {TRUST_INFO_ITEMS.map(({ key, Icon, titleUz, titleRu, textUz, textRu }) => (
+          <div key={key} className="flex items-start gap-3">
             <span className="shrink-0 w-11 h-11 rounded-full bg-muted flex items-center justify-center">
               <Icon className="w-5 h-5 text-foreground" strokeWidth={1.6} />
             </span>
             <div>
-              <h3 className="font-sans font-semibold text-sm text-foreground leading-tight">{title}</h3>
-              <p className="mt-1 text-xs text-muted-foreground/80">{text}</p>
+              <h3 className="font-sans font-semibold text-sm text-foreground leading-tight">
+                <EditableText
+                  contentKey={`trust_${key}_title`}
+                  fallback={language === 'uz' ? titleUz : titleRu}
+                  as="span"
+                  section="trust_info"
+                  field={`${key}_title`}
+                />
+              </h3>
+              <p className="mt-1 text-xs text-muted-foreground/80">
+                <EditableText
+                  contentKey={`trust_${key}_text`}
+                  fallback={language === 'uz' ? textUz : textRu}
+                  as="span"
+                  multiline
+                  section="trust_info"
+                  field={`${key}_text`}
+                />
+              </p>
             </div>
           </div>
         ))}
       </div>
+      <Link
+        to="/contact"
+        className={`mt-6 flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors ${compact ? '' : 'border-t border-border pt-6'}`}
+      >
+        <MapPin className="w-4 h-4 shrink-0" />
+        <EditableText
+          contentKey="trust_visit_text"
+          fallback={language === 'uz'
+            ? 'Ishlab chiqarish seximizga tashrif buyurishingiz mumkin — manzil Aloqa sahifasida'
+            : 'Вы можете посетить наш цех — адрес на странице Контакты'}
+          as="span"
+          section="trust_info"
+          field="visit_text"
+        />
+      </Link>
     </section>
   );
 }
