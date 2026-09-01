@@ -24,7 +24,7 @@ export default function About() {
       {/* Hero — single banner: photo bleeding in behind a dark gradient, text on top */}
       <section id="hero" className="pt-16 lg:pt-24">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="relative overflow-hidden rounded-[2rem] shadow-soft-lg min-h-[200px] lg:min-h-[260px] flex items-center">
+          <div className="relative overflow-hidden rounded-[2rem] shadow-soft-lg min-h-[230px] lg:min-h-[300px] flex items-center">
             <div className="absolute inset-0">
               <EditableImage
                 contentKey="about_hero_image"
@@ -37,8 +37,8 @@ export default function About() {
               <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/85 to-primary/10" />
             </div>
 
-            <div className="relative z-10 max-w-2xl px-8 sm:px-12 lg:px-16 py-6">
-              <span className="block text-xs uppercase tracking-[0.2em] text-primary-foreground/70 font-medium mb-2">
+            <div className="relative z-10 max-w-2xl px-8 sm:px-12 lg:px-16 py-7">
+              <span className="block text-xs uppercase tracking-[0.2em] text-primary-foreground/70 font-medium mb-3">
                 <EditableText
                   contentKey="about_title"
                   fallback={t.about.title}
@@ -47,7 +47,7 @@ export default function About() {
                   field="title"
                 />
               </span>
-              <h1 className="font-serif text-xl sm:text-2xl lg:text-3xl font-semibold leading-[1.15] tracking-tight text-primary-foreground">
+              <h1 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold leading-[1.15] tracking-tight text-primary-foreground">
                 <EditableText
                   contentKey="about_subtitle"
                   fallback={language === 'uz'
@@ -62,7 +62,7 @@ export default function About() {
               </h1>
               <Link
                 to="/contact"
-                className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-primary-foreground border-b border-primary-foreground/40 pb-1 hover:border-primary-foreground transition-colors"
+                className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-primary-foreground border-b border-primary-foreground/40 pb-1 hover:border-primary-foreground transition-colors"
               >
                 {language === 'uz' ? "Biz bilan bog'laning" : 'Связаться с нами'}
                 <ArrowRight className="w-4 h-4" />
