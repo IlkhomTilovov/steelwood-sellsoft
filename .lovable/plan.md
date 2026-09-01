@@ -1,6 +1,6 @@
 # SteelWood Premium Transformatsiya — To'liq Roadmap
 
-Loyiha nomi: **Mirmexa → OrisHome → SteelWood** (rebrand tarixi)
+Loyiha nomi: **SteelWood**
 Asos: hozirgi React + Vite + TS + Tailwind + Supabase stack saqlanadi, qaytadan qurilmaydi.
 Falsafa: *"interior emotion sotish"* — Apple minimalism + Zara Home + West Elm.
 
