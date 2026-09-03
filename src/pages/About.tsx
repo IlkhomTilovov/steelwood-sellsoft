@@ -1,4 +1,4 @@
-import { MessageCircle, PenTool, Hammer, Truck, ArrowRight } from 'lucide-react';
+import { MessageCircle, PenTool, Hammer, Truck, ArrowRight, Factory, Ruler, ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useSEO } from '@/hooks/useSEO';
@@ -100,24 +100,36 @@ export default function About() {
         </div>
       </section>
 
-      {/* Story */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="font-serif text-3xl font-bold mb-6">
-                <EditableText 
-                  contentKey="about_story_title" 
-                  fallback={t.about.story}
+      {/* Story — premium two-column positioning block */}
+      <section className="py-20 lg:py-28">
+        <div className="container mx-auto px-5 lg:px-8">
+          <div className="grid lg:grid-cols-[45fr_55fr] gap-12 lg:gap-16 xl:gap-20 items-center">
+            {/* Left — content */}
+            <div className="animate-fade-in">
+              <span className="inline-block text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground mb-5">
+                <EditableText
+                  contentKey="about_story_eyebrow"
+                  fallback={language === 'uz' ? 'KOMPANIYA HAQIDA' : 'О КОМПАНИИ'}
                   as="span"
-                  className="font-serif text-3xl font-bold"
+                  section="about"
+                  field="story_eyebrow"
+                />
+              </span>
+              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-semibold leading-[1.1] tracking-tight text-foreground">
+                <EditableText
+                  contentKey="about_story_title"
+                  fallback={language === 'uz'
+                    ? "Biznesingiz uchun ishlaydigan mebel yaratamiz"
+                    : 'Создаём мебель, которая работает на ваш бизнес'}
+                  as="span"
+                  multiline
                   section="about"
                   field="story_title"
                 />
               </h2>
-              <p className="text-muted-foreground leading-relaxed mb-4">
-                <EditableText 
-                  contentKey="about_story_text_1" 
+              <p className="mt-6 text-[15px] lg:text-base text-muted-foreground leading-relaxed max-w-xl">
+                <EditableText
+                  contentKey="about_story_text_1"
                   fallback={t.about.storyText}
                   as="span"
                   multiline
@@ -125,33 +137,93 @@ export default function About() {
                   field="story_text_1"
                 />
               </p>
-              <p className="text-muted-foreground leading-relaxed">
-                <EditableText 
-                  contentKey="about_story_text_2" 
+              <p className="mt-4 text-[15px] lg:text-base text-muted-foreground leading-relaxed max-w-xl">
+                <EditableText
+                  contentKey="about_story_text_2"
                   fallback={language === 'uz'
-                    ? "Metall karkas payvandlash va yig'ish jarayonini to'liq o'zimiz, o'z seximizda nazorat qilamiz. Seriyali modellar bilan bir qatorda, o'lchov bo'yicha individual buyurtmalarni ham bajaramiz."
-                    : "Процесс сварки металлического каркаса и сборки полностью контролируем сами, в собственном цехе. Наряду с серийными моделями выполняем индивидуальные заказы по размерам."
-                  }
+                    ? "Seriyali modellarni ishlab chiqaramiz va mijoz o'lchovlari hamda talablariga ko'ra individual buyurtmalarni bajaramiz."
+                    : 'Выпускаем серийные модели и выполняем индивидуальные заказы по размерам и требованиям клиента.'}
                   as="span"
                   multiline
                   section="about"
                   field="story_text_2"
                 />
               </p>
+
+              {/* Feature blocks */}
+              <div className="mt-10 grid sm:grid-cols-3 gap-3 sm:gap-4">
+                {[
+                  {
+                    Icon: Factory,
+                    title: language === 'uz' ? "O'z ishlab chiqarishimiz" : 'Собственное производство',
+                    text: language === 'uz'
+                      ? "Ishlab chiqarishning asosiy bosqichlarini o'zimiz nazorat qilamiz."
+                      : 'Контролируем ключевые этапы производства самостоятельно.',
+                  },
+                  {
+                    Icon: Ruler,
+                    title: language === 'uz' ? "Individual o'lchovlar" : 'Индивидуальные размеры',
+                    text: language === 'uz'
+                      ? "Sizning o'lchov va vazifalaringizga mos mebel tayyorlaymiz."
+                      : 'Изготавливаем мебель по вашим размерам и задачам.',
+                  },
+                  {
+                    Icon: ShieldCheck,
+                    title: language === 'uz' ? 'Sifat nazorati' : 'Контроль качества',
+                    text: language === 'uz'
+                      ? "Karkas, payvand va yig'ish sifatini kuzatib boramiz."
+                      : 'Следим за качеством каркаса, сварки и сборки.',
+                  },
+                ].map(({ Icon, title, text }) => (
+                  <div
+                    key={title}
+                    className="rounded-[20px] border border-border/70 bg-card/60 p-5 transition-colors hover:border-border"
+                  >
+                    <Icon className="w-5 h-5 text-foreground/70" strokeWidth={1.5} />
+                    <h3 className="mt-4 text-sm font-semibold text-foreground leading-snug">{title}</h3>
+                    <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed">{text}</p>
+                  </div>
+                ))}
+              </div>
+
+              <Link
+                to="/catalog"
+                className="mt-10 inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+              >
+                {language === 'uz' ? 'Katalogni ko\u2019rish' : 'Смотреть каталог'}
+                <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
-            <div className="rounded-2xl overflow-hidden">
-              <EditableImage
-                contentKey="about_story_image"
-                fallbackSrc="https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=800"
-                alt="Workshop"
-                className="w-full h-full object-cover"
-                wrapperClassName="w-full h-full"
-                section="about"
-              />
+
+            {/* Right — image */}
+            <div className="relative animate-fade-in">
+              <div className="relative overflow-hidden rounded-[24px] border border-border/60 shadow-soft-lg aspect-[4/3] lg:aspect-[5/4]">
+                <EditableImage
+                  contentKey="about_story_image"
+                  fallbackSrc="https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=1400"
+                  alt={language === 'uz' ? 'Ishlab chiqarish sexi' : 'Производственный цех'}
+                  className="w-full h-full object-cover"
+                  wrapperClassName="w-full h-full"
+                  section="about"
+                />
+              </div>
+
+              {/* Floating info card */}
+              <div className="absolute bottom-4 left-4 right-4 sm:right-auto sm:bottom-6 sm:left-6 max-w-[320px] rounded-[20px] border border-border/60 bg-card/95 backdrop-blur-sm px-5 py-4 shadow-soft-lg">
+                <p className="text-sm font-semibold text-foreground">
+                  {language === 'uz' ? "O'z ishlab chiqarishimiz" : 'Собственное производство'}
+                </p>
+                <p className="mt-1 text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+                  {language === 'uz'
+                    ? 'Loft mebel • Metall • Individual buyurtma'
+                    : 'Loft мебель • Металл • Индивидуальные заказы'}
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </section>
+
 
       {/* Mission & Values */}
       <section className="py-16 bg-muted/50">
