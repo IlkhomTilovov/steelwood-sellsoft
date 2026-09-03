@@ -1,4 +1,4 @@
-import { MessageCircle, PenTool, Hammer, Truck, ArrowRight } from 'lucide-react';
+import { MessageCircle, PenTool, Hammer, Truck, ArrowRight, Factory, Ruler, ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useSEO } from '@/hooks/useSEO';
