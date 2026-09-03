@@ -84,7 +84,7 @@ export function HeroBento({
               <span className="text-[10px] lg:text-xs font-semibold uppercase tracking-[0.24em] text-background/60">
                 {language === 'uz' ? "To'plamlar" : 'Комплекты'}
               </span>
-              <h1 className="mt-4 font-serif text-3xl sm:text-4xl lg:text-6xl font-black leading-[1.05] text-background max-w-[16ch]">
+              <h1 className="mt-4 font-sans text-3xl sm:text-4xl lg:text-6xl font-black leading-[1.05] text-background max-w-[16ch]">
                 {mainTitle}
               </h1>
             </div>
