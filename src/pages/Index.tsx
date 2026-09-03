@@ -15,12 +15,9 @@ import { useState, useRef, useEffect } from 'react';
 import { getPageSeo } from '@/lib/pageSeo';
 import { PROMO_ICONS } from '@/lib/promoIcons';
 import { CollectionBanners, DiscountBanner, InspirationSection } from '@/components/home/HomeSections';
-import { LazyImage } from '@/components/LazyImage';
 
 
 import serviceKitchen from '@/assets/service-kitchen.jpg';
-
-const HOME_PROMO_ICONS: Record<string, LucideIcon> = PROMO_ICONS;
 
 function useInView(threshold = 0.15) {
   const ref = useRef<HTMLDivElement>(null);
