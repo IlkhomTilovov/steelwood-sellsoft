@@ -1,4 +1,7 @@
-import { MessageCircle, PenTool, Hammer, Truck, ArrowRight, Factory, Ruler, ShieldCheck } from 'lucide-react';
+import { MessageCircle, PenTool, Hammer, Truck, ArrowRight, Factory, Ruler, ShieldCheck, Play } from 'lucide-react';
+import delivery1 from '@/assets/videos/delivery-1.mp4.asset.json';
+import delivery2 from '@/assets/videos/delivery-2.mp4.asset.json';
+import delivery3 from '@/assets/videos/delivery-3.mp4.asset.json';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useSEO } from '@/hooks/useSEO';
