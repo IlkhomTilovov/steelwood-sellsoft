@@ -618,7 +618,7 @@ export default function Index() {
                 to={heroUrl}
                 className="group mt-4 lg:mt-6 relative block overflow-hidden rounded-[2rem] bg-secondary shadow-soft hover:shadow-soft-lg transition-all duration-500 ease-luxe"
               >
-                <div className="grid grid-cols-1 md:grid-cols-[1.1fr_1fr] items-center min-h-[220px] lg:min-h-[280px]">
+                <div className="grid grid-cols-1 md:grid-cols-[1.1fr_1fr] items-center h-auto">
                   <div className="relative order-1 h-auto overflow-hidden md:order-2 flex items-center justify-center bg-secondary p-6 lg:p-10">
                     <LazyImage
                       src={hero.images?.[0] || '/placeholder.svg'}
