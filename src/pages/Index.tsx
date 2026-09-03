@@ -13,7 +13,6 @@ import { HeroBento } from '@/components/home/HeroBento';
 import { PromoCarousel } from '@/components/home/PromoCarousel';
 import { useState, useRef, useEffect } from 'react';
 import { getPageSeo } from '@/lib/pageSeo';
-import { PROMO_ICONS } from '@/lib/promoIcons';
 import { CollectionBanners, DiscountBanner, InspirationSection } from '@/components/home/HomeSections';
 
 
