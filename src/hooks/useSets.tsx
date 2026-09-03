@@ -51,12 +51,18 @@ export function useActiveSets(enabled = true) {
             .from('products')
             .select('*')
             .in('id', allIds)
-            .eq('is_active', true);
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
           const byId: Record<string, Product> = {};
           (prods || []).forEach(p => { byId[p.id] = p as Product; });
           const map: Record<string, Product[]> = {};
           list.forEach(s => {
-            map[s.id] = (s.product_ids || []).map(id => byId[id]).filter(Boolean);
+            // Mahsulotlar admin paneldagi "Tartib raqami" (sort_order) bo'yicha ko'rsatiladi
+            const setProductIds = s.product_ids || [];
+            const sortedProducts = Object.values(byId)
+              .filter(p => setProductIds.includes(p.id))
+              .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
+            map[s.id] = sortedProducts;
           });
           setProductsBySet(map);
         }

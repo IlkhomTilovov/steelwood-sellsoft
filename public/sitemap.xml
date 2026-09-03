@@ -128,12 +128,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://steelwood.uz/product/atico</loc>
-    <lastmod>2026-09-01T20:20:28.906762+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://steelwood.uz/product/moderna-1</loc>
     <lastmod>2026-09-01T20:27:51.155985+00:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -284,20 +278,26 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://steelwood.uz/product/timber</loc>
+    <lastmod>2026-09-03T13:07:24.948091+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://steelwood.uz/product/base</loc>
-    <lastmod>2026-09-03T12:50:08.114925+00:00</lastmod>
+    <lastmod>2026-09-03T17:47:57.371145+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://steelwood.uz/product/astra</loc>
-    <lastmod>2026-09-03T13:03:46.200444+00:00</lastmod>
+    <lastmod>2026-09-03T17:47:49.053964+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://steelwood.uz/product/timber</loc>
-    <lastmod>2026-09-03T13:07:24.948091+00:00</lastmod>
+    <loc>https://steelwood.uz/product/atico</loc>
+    <lastmod>2026-09-03T18:51:45.885189+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>

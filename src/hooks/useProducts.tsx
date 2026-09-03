@@ -30,6 +30,7 @@ export interface Product {
   meta_description_uz: string | null;
   meta_description_ru: string | null;
   meta_keywords: string | null;
+  sort_order: number | null;
   created_at: string;
   updated_at: string;
 }
@@ -255,6 +256,7 @@ export function useFeaturedProducts(limit: number = 8, enabled = true) {
             .from('products')
             .select('*')
             .eq('is_active', true)
+            .order('sort_order', { ascending: true })
             .order('created_at', { ascending: false })
             .limit(limit);
 
