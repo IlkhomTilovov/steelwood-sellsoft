@@ -144,7 +144,7 @@ function SetTile({
           </span>
           <ArrowUpRight className="w-4 h-4 shrink-0 text-media-foreground transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
         </div>
-        <h2 className="font-serif text-lg lg:text-2xl font-bold leading-tight text-media-foreground">
+        <h2 className="font-sans text-lg lg:text-2xl font-bold leading-tight text-media-foreground">
           {title}
         </h2>
       </div>
