@@ -566,7 +566,9 @@ export default function ProductsNew() {
       category_id: product.category_id || '',
       price: product.price?.toString() || '',
       original_price: product.original_price?.toString() || '',
-      sort_order: (product as any).sort_order?.toString() || '',
+      sort_order: (product as any).sort_order && (product as any).sort_order < 9999
+        ? (product as any).sort_order.toString()
+        : '',
       images: product.images || [],
       materials: (product.materials || []).join(', '),
       sizes: (product.sizes || []).join(', '),
