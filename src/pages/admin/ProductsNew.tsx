@@ -61,6 +61,7 @@ interface Product {
   category_id: string | null;
   price: number | null;
   original_price: number | null;
+  sort_order: number | null;
   images: string[];
   materials: string[];
   sizes: string[];
@@ -101,6 +102,7 @@ interface FormData {
   category_id: string;
   price: string;
   original_price: string;
+  sort_order: string;
   images: string[];
   materials: string;
   sizes: string;
@@ -141,6 +143,7 @@ const emptyForm: FormData = {
   category_id: '',
   price: '',
   original_price: '',
+  sort_order: '',
   images: [],
   materials: '',
   sizes: '',
@@ -436,6 +439,7 @@ export default function ProductsNew() {
       const to = from + ADMIN_PAGE_SIZE - 1;
 
       query = query
+        .order('sort_order', { ascending: true })
         .order('created_at', { ascending: false })
         .range(from, to);
 
@@ -562,6 +566,7 @@ export default function ProductsNew() {
       category_id: product.category_id || '',
       price: product.price?.toString() || '',
       original_price: product.original_price?.toString() || '',
+      sort_order: (product as any).sort_order?.toString() || '',
       images: product.images || [],
       materials: (product.materials || []).join(', '),
       sizes: (product.sizes || []).join(', '),
@@ -722,6 +727,7 @@ export default function ProductsNew() {
       category_id: formData.category_id || null,
       price: formData.price ? parseFloat(formData.price) : null,
       original_price: formData.original_price ? parseFloat(formData.original_price) : null,
+      sort_order: formData.sort_order ? parseInt(formData.sort_order, 10) : 0,
       images: formData.images,
       materials: formData.materials.split(',').map(s => s.trim()).filter(Boolean),
       sizes: formData.sizes.split(',').map(s => s.trim()).filter(Boolean),
@@ -1349,6 +1355,21 @@ export default function ProductsNew() {
                     onChange={(e) => setFormData({ ...formData, original_price: e.target.value })}
                     placeholder="0"
                   />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Tartib raqami</Label>
+                  <Input
+                    type="number"
+                    value={formData.sort_order}
+                    onChange={(e) => setFormData({ ...formData, sort_order: e.target.value })}
+                    placeholder="0"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Kichik raqam birinchi ko'rinadi (0, 1, 2, ...)
+                  </p>
                 </div>
               </div>
 
