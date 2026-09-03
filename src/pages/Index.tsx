@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, ArrowLeft, Crown, Percent, Sparkles, Star, Tag, type LucideIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { ArrowRight, ArrowLeft, type LucideIcon } from 'lucide-react';
 import { ProductCard } from '@/components/ProductCard';
 import { useFeaturedProducts, useCategories } from '@/hooks/useProducts';
 import { useActiveSets } from '@/hooks/useSets';
