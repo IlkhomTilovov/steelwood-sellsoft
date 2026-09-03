@@ -256,6 +256,7 @@ export function useFeaturedProducts(limit: number = 8, enabled = true) {
             .from('products')
             .select('*')
             .eq('is_active', true)
+            .order('sort_order', { ascending: true })
             .order('created_at', { ascending: false })
             .limit(limit);
 
