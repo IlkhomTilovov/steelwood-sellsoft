@@ -619,12 +619,12 @@ export default function Index() {
                 className="group mt-4 lg:mt-6 relative block overflow-hidden rounded-[2rem] bg-secondary shadow-soft hover:shadow-soft-lg transition-all duration-500 ease-luxe"
               >
                 <div className="grid grid-cols-1 md:grid-cols-[1.1fr_1fr] items-center min-h-[220px] lg:min-h-[280px]">
-                  <div className="relative order-1 h-56 overflow-hidden md:order-2 md:h-full">
+                  <div className="relative order-1 h-56 overflow-hidden md:order-2 md:h-full flex items-center justify-center bg-secondary p-6 lg:p-10">
                     <LazyImage
                       src={hero.images?.[0] || '/placeholder.svg'}
                       alt={heroName}
-                      wrapperClassName="absolute inset-0"
-                      className="w-full h-full object-cover transition-transform duration-700 ease-luxe group-hover:scale-105"
+                      wrapperClassName="relative w-full h-full"
+                      className="w-full h-full object-contain transition-transform duration-700 ease-luxe group-hover:scale-105"
                     />
                     {heroHasDiscount && (
                       <span className="absolute left-4 top-4 rounded-lg bg-foreground px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-background shadow-soft-sm">
