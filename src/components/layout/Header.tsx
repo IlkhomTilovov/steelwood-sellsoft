@@ -74,14 +74,14 @@ export function Header() {
           .eq('is_active', true)
           .not('original_price', 'is', null)
           .gt('original_price', 0)
-          .order('sort_order', { ascending: true })
+          .order('sort_order', { ascending: true, nullsFirst: false })
           .order('created_at', { ascending: false })
           .limit(4),
         supabase
           .from('products')
           .select('*')
           .eq('is_active', true)
-          .order('sort_order', { ascending: true })
+          .order('sort_order', { ascending: true, nullsFirst: false })
           .order('created_at', { ascending: false })
           .limit(4),
       ]);

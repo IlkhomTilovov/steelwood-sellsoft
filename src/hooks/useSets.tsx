@@ -31,7 +31,7 @@ export function useActiveSets(enabled = true) {
           .from('sets')
           .select('*')
           .eq('is_active', true)
-          .order('sort_order', { ascending: true });
+          .order('sort_order', { ascending: true, nullsFirst: false });
         if (error) throw error;
 
         const list = (setsData || []) as ProductSet[];
@@ -52,7 +52,7 @@ export function useActiveSets(enabled = true) {
             .select('*')
             .in('id', allIds)
             .eq('is_active', true)
-            .order('sort_order', { ascending: true });
+            .order('sort_order', { ascending: true, nullsFirst: false });
           const byId: Record<string, Product> = {};
           (prods || []).forEach(p => { byId[p.id] = p as Product; });
           const map: Record<string, Product[]> = {};
@@ -87,7 +87,7 @@ export function useAllSets() {
     const { data, error } = await supabase
       .from('sets')
       .select('*')
-      .order('sort_order', { ascending: true });
+      .order('sort_order', { ascending: true, nullsFirst: false });
     if (!error) setSets((data || []) as ProductSet[]);
     setLoading(false);
   };
