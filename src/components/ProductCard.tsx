@@ -69,6 +69,11 @@ export function ProductCard({ product, eager = false, imageAspect = 'aspect-squa
 
 
       <div className={`flex flex-col flex-1 ${compact ? 'p-1.5 md:p-2' : 'p-3 md:p-5'}`}>
+        <Link to={productUrl} className="hover:text-primary transition-colors">
+          <h3 className={`font-medium text-foreground line-clamp-2 leading-snug ${compact ? 'text-xs' : 'text-sm md:text-base'}`}>
+            {name}
+          </h3>
+        </Link>
         {price > 0 && (
           <div className={`flex flex-col leading-tight ${compact ? 'mt-0.5' : 'mt-1.5'}`}>
             {hasDiscount && (
