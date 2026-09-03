@@ -243,7 +243,7 @@ Deno.serve(async (req) => {
       // Don't fail the order if Telegram fails
       console.error('Telegram notification error (non-blocking):', telegramError);
     }
-    */
+    
 
     // AmoCRM notification is handled by a database trigger on order_items (see
     // notify_amocrm_new_order in supabase SQL), not from here — avoids depending
