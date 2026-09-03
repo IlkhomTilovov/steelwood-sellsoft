@@ -227,6 +227,81 @@ export default function About() {
         </div>
       </section>
 
+      {/* Delivery process — 3 customer-facing videos */}
+      <section className="py-20 lg:py-28 bg-muted/30">
+        <div className="container mx-auto px-5 lg:px-8">
+          <div className="max-w-2xl mb-12 lg:mb-16">
+            <span className="inline-block text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground mb-5">
+              {language === 'uz' ? 'YETKAZIB BERISH' : 'ДОСТАВКА'}
+            </span>
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-semibold leading-[1.1] tracking-tight text-foreground">
+              {language === 'uz'
+                ? "Buyurtmadan xonangizgacha"
+                : 'От заказа до вашего помещения'}
+            </h2>
+            <p className="mt-5 text-[15px] lg:text-base text-muted-foreground leading-relaxed max-w-xl">
+              {language === 'uz'
+                ? "Har bir buyurtma bizning nazoratimizdan o'tadi — ishlab chiqarishdan boshlab, qadoqlash va o'rnatib berishgacha."
+                : 'Каждый заказ проходит под нашим контролем — от производства до упаковки и установки.'}
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            {[
+              {
+                src: delivery1.url,
+                title: language === 'uz' ? 'Ishlab chiqarish' : 'Производство',
+                text: language === 'uz'
+                  ? 'Mebelni o‘z seximizda, mustahkam metall karkas asosida yasaymiz.'
+                  : 'Изготавливаем мебель в собственном цехе на прочном металлическом каркасе.',
+              },
+              {
+                src: delivery2.url,
+                title: language === 'uz' ? 'Sifat nazorati' : 'Контроль качества',
+                text: language === 'uz'
+                  ? 'Har bir detalni tekshirib, qadoqlashdan oldin tayyor mahsulotni qabul qilamiz.'
+                  : 'Проверяем каждую деталь и принимаем готовое изделие перед упаковкой.',
+              },
+              {
+                src: delivery3.url,
+                title: language === 'uz' ? 'Yetkazib berish va o‘rnatish' : 'Доставка и установка',
+                text: language === 'uz'
+                  ? 'Buyurtmani xavfsiz yetkazib, kerak bo‘lsa o‘rnatib ham beramiz.'
+                  : 'Бережно доставляем заказ и при необходимости производим установку.',
+              },
+            ].map((video, i) => (
+              <div
+                key={i}
+                className="group rounded-[24px] border border-border/60 bg-card overflow-hidden shadow-soft-lg transition-all hover:shadow-soft-xl hover:-translate-y-1"
+              >
+                <div className="relative aspect-[9/16] bg-muted">
+                  <video
+                    src={video.src}
+                    className="w-full h-full object-cover"
+                    controls
+                    playsInline
+                    preload="metadata"
+                    poster=""
+                  />
+                </div>
+                <div className="p-5 lg:p-6">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-[10px] font-semibold">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <h3 className="font-serif text-lg font-semibold text-foreground">
+                      {video.title}
+                    </h3>
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {video.text}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Mission & Values */}
       <section className="py-16 bg-muted/50">
