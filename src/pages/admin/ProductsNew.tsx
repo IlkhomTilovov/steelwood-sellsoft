@@ -566,7 +566,9 @@ export default function ProductsNew() {
       category_id: product.category_id || '',
       price: product.price?.toString() || '',
       original_price: product.original_price?.toString() || '',
-      sort_order: (product as any).sort_order?.toString() || '',
+      sort_order: (product as any).sort_order && (product as any).sort_order < 9999
+        ? (product as any).sort_order.toString()
+        : '',
       images: product.images || [],
       materials: (product.materials || []).join(', '),
       sizes: (product.sizes || []).join(', '),
@@ -727,7 +729,10 @@ export default function ProductsNew() {
       category_id: formData.category_id || null,
       price: formData.price ? parseFloat(formData.price) : null,
       original_price: formData.original_price ? parseFloat(formData.original_price) : null,
-      sort_order: formData.sort_order ? parseInt(formData.sort_order, 10) : 0,
+      // Tartib raqami kiritilmasa — ro'yxat oxiriga tushadi (9999)
+      sort_order: formData.sort_order && parseInt(formData.sort_order, 10) > 0
+        ? parseInt(formData.sort_order, 10)
+        : 9999,
       images: formData.images,
       materials: formData.materials.split(',').map(s => s.trim()).filter(Boolean),
       sizes: formData.sizes.split(',').map(s => s.trim()).filter(Boolean),
