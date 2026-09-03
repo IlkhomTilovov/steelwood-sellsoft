@@ -183,7 +183,7 @@ export function useProducts(
       const to = from + pageSize - 1;
 
       query = query
-        .order('sort_order', { ascending: true })
+        .order('sort_order', { ascending: true, nullsFirst: false })
         .order('created_at', { ascending: false })
         .range(from, to);
 
@@ -243,7 +243,7 @@ export function useFeaturedProducts(limit: number = 8, enabled = true) {
           .select('*')
           .eq('is_active', true)
           .eq('is_featured', true)
-          .order('sort_order', { ascending: true })
+          .order('sort_order', { ascending: true, nullsFirst: false })
           .limit(limit);
 
         if (featuredError) throw featuredError;
@@ -256,7 +256,7 @@ export function useFeaturedProducts(limit: number = 8, enabled = true) {
             .from('products')
             .select('*')
             .eq('is_active', true)
-            .order('sort_order', { ascending: true })
+            .order('sort_order', { ascending: true, nullsFirst: false })
             .order('created_at', { ascending: false })
             .limit(limit);
 
@@ -293,7 +293,7 @@ export function useCategories(enabled = true) {
           .from('categories')
           .select('id, name_uz, name_ru, slug, icon, image, is_active, show_in_banner, parent_id, section_id, meta_title_uz, meta_title_ru, meta_description_uz, meta_description_ru, meta_keywords')
           .eq('is_active', true)
-          .order('sort_order', { ascending: true });
+          .order('sort_order', { ascending: true, nullsFirst: false });
 
         if (error) throw error;
         setCategories(data || []);
@@ -333,7 +333,7 @@ export function useSections(enabled = true) {
           .from('sections')
           .select('id, name_uz, name_ru, slug, sort_order, is_active')
           .eq('is_active', true)
-          .order('sort_order', { ascending: true });
+          .order('sort_order', { ascending: true, nullsFirst: false });
 
         if (error) throw error;
         setSections(data || []);

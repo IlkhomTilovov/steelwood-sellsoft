@@ -224,7 +224,7 @@ export function DiscountBanner({
       .select('id, name_uz, name_ru, slug, price, original_price, images')
       .eq('is_active', true)
       .eq('show_in_discount_banner', true)
-      .order('sort_order', { ascending: true })
+      .order('sort_order', { ascending: true, nullsFirst: false })
       .limit(1)
       .maybeSingle()
       .then(({ data }) => {
