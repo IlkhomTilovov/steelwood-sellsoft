@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Send, Loader2, ShieldCheck } from 'lucide-react';
+import { Send, Loader2, ShieldCheck, Home, User, Phone, Clock, HelpCircle, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import {
   Dialog,
   DialogContent,
@@ -16,14 +17,17 @@ import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useCart } from '@/hooks/useCart';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useCheckoutFields, CheckoutField } from '@/hooks/useCheckoutFields';
 import { supabase } from '@/integrations/supabase/client';
-import { z } from 'zod';
 
-const orderSchema = z.object({
-  name: z.string().trim().min(2, 'Ism kamida 2 ta belgidan iborat bo\'lishi kerak').max(100),
-  phone: z.string().trim().min(9, 'Telefon raqamini to\'liq kiriting').max(20),
-  message: z.string().max(500).optional(),
-});
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  Home,
+  User,
+  Phone,
+  Clock,
+  HelpCircle,
+  MessageSquare,
+};
 
 interface OrderFormProps {
   open: boolean;
@@ -31,28 +35,19 @@ interface OrderFormProps {
 }
 
 export function OrderForm({ open, onOpenChange }: OrderFormProps) {
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    message: '',
-  });
+  const [fieldValues, setFieldValues] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { toast } = useToast();
   const { language } = useLanguage();
   const { items, totalPrice, clearCart } = useCart();
   const isMobile = useIsMobile();
+  const { fields: checkoutFields, loading: fieldsLoading } = useCheckoutFields();
 
   const t = {
     uz: {
       title: 'Buyurtma berish',
       description: 'Ma\'lumotlaringizni kiriting, biz siz bilan bog\'lanamiz',
-      name: 'Ismingiz',
-      namePlaceholder: 'To\'liq ismingiz',
-      phone: 'Telefon raqamingiz',
-      phonePlaceholder: '+998 90 123 45 67',
-      message: 'Qo\'shimcha xabar',
-      messagePlaceholder: 'Sizning xabaringiz (ixtiyoriy)',
       submit: 'Buyurtma yuborish',
       success: 'Buyurtmangiz qabul qilindi! Tez orada siz bilan bog\'lanamiz.',
       error: 'Xatolik yuz berdi. Iltimos, qaytadan urinib ko\'ring.',
@@ -63,12 +58,6 @@ export function OrderForm({ open, onOpenChange }: OrderFormProps) {
     ru: {
       title: 'Оформить заказ',
       description: 'Введите ваши данные, мы свяжемся с вами',
-      name: 'Ваше имя',
-      namePlaceholder: 'Полное имя',
-      phone: 'Номер телефона',
-      phonePlaceholder: '+998 90 123 45 67',
-      message: 'Дополнительное сообщение',
-      messagePlaceholder: 'Ваше сообщение (необязательно)',
       submit: 'Отправить заказ',
       success: 'Ваш заказ принят! Мы скоро свяжемся с вами.',
       error: 'Произошла ошибка. Пожалуйста, попробуйте снова.',
@@ -80,26 +69,61 @@ export function OrderForm({ open, onOpenChange }: OrderFormProps) {
 
   const text = t[language];
 
+  const getFieldLabel = (field: CheckoutField) => (language === 'uz' ? field.label_uz : field.label_ru);
+
+  const getOptionLabel = (field: CheckoutField, value: string) => {
+    const option = field.options.find(o => o.value === value);
+    if (!option) return value;
+    return language === 'uz' ? option.label_uz : option.label_ru;
+  };
+
+  const handlePhoneChange = (fieldId: string, value: string) => {
+    let cleaned = value.replace(/\D/g, '');
+    if (!cleaned.startsWith('998')) cleaned = '998' + cleaned;
+    cleaned = cleaned.slice(0, 12);
+
+    let formatted = '+998';
+    if (cleaned.length > 3) formatted += ' ' + cleaned.slice(3, 5);
+    if (cleaned.length > 5) formatted += ' ' + cleaned.slice(5, 8);
+    if (cleaned.length > 8) formatted += ' ' + cleaned.slice(8, 10);
+    if (cleaned.length > 10) formatted += ' ' + cleaned.slice(10, 12);
+
+    setFieldValues(prev => ({ ...prev, [fieldId]: formatted }));
+  };
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    checkoutFields.forEach(field => {
+      const value = fieldValues[field.id]?.trim() || '';
+
+      if (field.is_required && !value) {
+        newErrors[field.id] =
+          field.field_type === 'radio'
+            ? language === 'uz' ? 'Tanlash shart' : 'Выберите вариант'
+            : language === 'uz' ? 'To\'ldirish shart' : 'Обязательное поле';
+      }
+
+      if (field.field_type === 'phone' && value) {
+        const cleanedPhone = value.replace(/\s/g, '');
+        if (!/^\+998\d{9}$/.test(cleanedPhone)) {
+          newErrors[field.id] = language === 'uz' ? 'Noto\'g\'ri telefon formati' : 'Неверный формат телефона';
+        }
+      }
+    });
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrors({});
-
-    const result = orderSchema.safeParse(formData);
-    if (!result.success) {
-      const fieldErrors: Record<string, string> = {};
-      result.error.errors.forEach(err => {
-        if (err.path[0]) {
-          fieldErrors[err.path[0] as string] = err.message;
-        }
-      });
-      setErrors(fieldErrors);
-      return;
-    }
+    if (!validateForm()) return;
 
     if (items.length === 0) {
       toast({
-        title: 'Savat bo\'sh',
-        description: 'Iltimos, mahsulot qo\'shing',
+        title: language === 'uz' ? 'Savat bo\'sh' : 'Корзина пуста',
+        description: language === 'uz' ? 'Iltimos, mahsulot qo\'shing' : 'Пожалуйста, добавьте товар',
         variant: 'destructive',
       });
       return;
@@ -108,6 +132,31 @@ export function OrderForm({ open, onOpenChange }: OrderFormProps) {
     setLoading(true);
 
     try {
+      const nameField = checkoutFields.find(f => f.field_type === 'text');
+      const phoneField = checkoutFields.find(f => f.field_type === 'phone');
+
+      const customerName = nameField ? (fieldValues[nameField.id] || '').trim() : '';
+      const customerPhone = phoneField ? (fieldValues[phoneField.id] || '').replace(/\s/g, '') : '';
+
+      if (!customerName) {
+        throw new Error(language === 'uz' ? 'Ismingizni kiriting' : 'Введите имя');
+      }
+      if (!customerPhone || customerPhone.length < 13) {
+        throw new Error(language === 'uz' ? 'Telefon raqamni to\'liq kiriting' : 'Введите полный номер телефона');
+      }
+
+      const messageFields = checkoutFields
+        .filter(f => f.id !== nameField?.id && f.id !== phoneField?.id && fieldValues[f.id])
+        .map(field => {
+          const label = getFieldLabel(field);
+          const value = field.field_type === 'radio'
+            ? getOptionLabel(field, fieldValues[field.id])
+            : fieldValues[field.id];
+          return `${label}: ${value}`;
+        });
+
+      const customerMessage = messageFields.length > 0 ? messageFields.join('\n') : undefined;
+
       const orderItems = items.map(item => ({
         product_id: item.product.id,
         quantity: item.quantity,
@@ -119,16 +168,25 @@ export function OrderForm({ open, onOpenChange }: OrderFormProps) {
 
       const { data: orderResult, error: orderError } = await supabase.functions.invoke('create-order', {
         body: {
-          customer_name: formData.name.trim(),
-          customer_phone: formData.phone.replace(/\s/g, ''),
-          customer_message: formData.message || undefined,
+          customer_name: customerName,
+          customer_phone: customerPhone,
+          customer_message: customerMessage,
           items: orderItems,
         },
       });
 
-      if (orderError) throw orderError;
+      if (orderError) {
+        let errorMessage = language === 'uz' ? 'Buyurtma yaratishda xatolik' : 'Ошибка при создании заказа';
+        try {
+          if ((orderError as any).context?.body) {
+            const body = await new Response((orderError as any).context.body).json();
+            if (body?.error) errorMessage = body.error;
+          }
+        } catch {}
+        throw new Error(errorMessage);
+      }
 
-      if (!orderResult.success) {
+      if (orderResult && !orderResult.success) {
         throw new Error(orderResult.error || 'Buyurtma yaratishda xatolik');
       }
 
@@ -139,7 +197,7 @@ export function OrderForm({ open, onOpenChange }: OrderFormProps) {
 
       clearCart();
       onOpenChange(false);
-      setFormData({ name: '', phone: '', message: '' });
+      setFieldValues({});
     } catch (error: any) {
       console.error('Order error:', error);
       toast({
@@ -176,58 +234,114 @@ export function OrderForm({ open, onOpenChange }: OrderFormProps) {
     </div>
   );
 
-  const fields = (
-    <div className="space-y-4">
-      <div className="space-y-1.5">
-        <Label htmlFor="name" className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-          {text.name} *
-        </Label>
-        <Input
-          id="name"
-          className="h-12 rounded-xl text-base"
-          placeholder={text.namePlaceholder}
-          value={formData.name}
-          onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-          required
-        />
-        {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
-      </div>
+  const renderField = (field: CheckoutField) => {
+    const IconComponent = field.icon ? iconMap[field.icon] : null;
+    const label = getFieldLabel(field);
+    const value = fieldValues[field.id] || '';
+    const error = errors[field.id];
 
-      <div className="space-y-1.5">
-        <Label htmlFor="phone" className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-          {text.phone} *
-        </Label>
-        <Input
-          id="phone"
-          type="tel"
-          inputMode="tel"
-          className="h-12 rounded-xl text-base"
-          placeholder={text.phonePlaceholder}
-          value={formData.phone}
-          onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-          required
-        />
-        {errors.phone && <p className="text-xs text-destructive">{errors.phone}</p>}
-      </div>
+    const labelElement = (
+      <Label
+        htmlFor={field.id}
+        className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-muted-foreground"
+      >
+        {IconComponent && <IconComponent className="h-3.5 w-3.5" />}
+        {label} {field.is_required && '*'}
+      </Label>
+    );
 
-      <div className="space-y-1.5">
-        <Label htmlFor="message" className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-          {text.message}
-        </Label>
-        <Textarea
-          id="message"
-          className="rounded-xl text-base resize-none"
-          placeholder={text.messagePlaceholder}
-          value={formData.message}
-          onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
-          rows={3}
-        />
-      </div>
+    switch (field.field_type) {
+      case 'text':
+        return (
+          <div key={field.id} className="space-y-1.5">
+            {labelElement}
+            <Input
+              id={field.id}
+              className={`h-12 rounded-xl text-base ${error ? 'border-destructive' : ''}`}
+              value={value}
+              onChange={(e) => setFieldValues(prev => ({ ...prev, [field.id]: e.target.value }))}
+              placeholder={language === 'uz' ? `${label}ni kiriting` : `Введите ${label.toLowerCase()}`}
+            />
+            {error && <p className="text-xs text-destructive">{error}</p>}
+          </div>
+        );
+
+      case 'phone':
+        return (
+          <div key={field.id} className="space-y-1.5">
+            {labelElement}
+            <Input
+              id={field.id}
+              type="tel"
+              inputMode="tel"
+              className={`h-12 rounded-xl text-base ${error ? 'border-destructive' : ''}`}
+              value={value}
+              onChange={(e) => handlePhoneChange(field.id, e.target.value)}
+              placeholder="+998 90 123 45 67"
+            />
+            {error && <p className="text-xs text-destructive">{error}</p>}
+          </div>
+        );
+
+      case 'textarea':
+        return (
+          <div key={field.id} className="space-y-1.5">
+            {labelElement}
+            <Textarea
+              id={field.id}
+              className={`rounded-xl text-base resize-none ${error ? 'border-destructive' : ''}`}
+              value={value}
+              onChange={(e) => setFieldValues(prev => ({ ...prev, [field.id]: e.target.value }))}
+              placeholder={language === 'uz' ? 'Sizning xabaringiz (ixtiyoriy)' : 'Ваше сообщение (необязательно)'}
+              rows={3}
+            />
+            {error && <p className="text-xs text-destructive">{error}</p>}
+          </div>
+        );
+
+      case 'radio':
+        return (
+          <div key={field.id} className="space-y-2">
+            {labelElement}
+            <RadioGroup
+              value={value}
+              onValueChange={(val) => setFieldValues(prev => ({ ...prev, [field.id]: val }))}
+              className="grid gap-2"
+            >
+              {field.options.map(option => (
+                <label
+                  key={option.id}
+                  htmlFor={`${field.id}-${option.id}`}
+                  className={`flex items-center gap-3 rounded-xl border p-3 cursor-pointer transition-colors ${
+                    value === option.value ? 'border-primary bg-primary/5' : 'border-border'
+                  }`}
+                >
+                  <RadioGroupItem value={option.value} id={`${field.id}-${option.id}`} />
+                  <span className="text-sm">
+                    {language === 'uz' ? option.label_uz : option.label_ru}
+                  </span>
+                </label>
+              ))}
+            </RadioGroup>
+            {error && <p className="text-xs text-destructive">{error}</p>}
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  const fields = fieldsLoading ? (
+    <div className="py-6 flex justify-center">
+      <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
     </div>
+  ) : (
+    <div className="space-y-4">{checkoutFields.map(renderField)}</div>
   );
 
   const submitButton = (
-    <Button type="submit" size="lg" className="w-full h-12 rounded-xl gap-2" disabled={loading}>
+    <Button type="submit" size="lg" className="w-full h-12 rounded-xl gap-2" disabled={loading || fieldsLoading}>
       {loading ? (
         <>
           <Loader2 className="h-4 w-4 animate-spin" />
@@ -281,7 +395,7 @@ export function OrderForm({ open, onOpenChange }: OrderFormProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{text.title}</DialogTitle>
           <DialogDescription>{text.description}</DialogDescription>
